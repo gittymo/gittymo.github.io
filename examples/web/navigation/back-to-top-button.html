@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examples of Back to Top Buttons</title>
+</head>
+<link rel="stylesheet" href="../../examples.css">
+<script src="../../examples.js"></script>
+<body>
+<div id="examples-box">
+    <div class="examples-description">
+        <h1>Back to Top Button Example</h1>
+        <p>The following examples show different implementations of a "Back to Top" button using HTML,
+            CSS, and JavaScript. These buttons allow users to quickly navigate back to the top of a webpage after scrolling down.  Unlike the second example, the button is constantly visible</p>
+        <p>The first example takes the much simpler approach of using just HTML and CSS to create a fixed button that appears when the user scrolls down the page.  When the user clicks the button, the page smoothly scrolls back to the top.</p>
+        <p>The button's click event triggers the scrollTo method on it's parent DIV element to provide a smooth scrolling effect.  This method can be used on the body of the webpage or any scrollable element.</p>
+    </div>
+    <!-- Start of scrollButtonDemo1 -->
+    <div class="examples-container" style="height: 320px !important;">
+        <div class="examples-code" id="scrollButtonDemo1Code"></div>
+        <div class="examples-preview" id="scrollButtonDemo1Preview">
+            <div id="scrollArea1">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+                <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+                <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+                <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                <button id="backToTopButton1">Back to Top</button>
+            </div>
+            <style>
+                #scrollArea1 {
+                    height: calc(100% - 20px); 
+                    overflow-y: scroll; 
+                    border: 1px solid #ccc; 
+                    padding: 10px;
+                }
+
+                #scrollArea1 p {
+                    margin: 0px 0px 15px 0px;
+                }
+
+                #backToTopButton1 {
+                    position: sticky;
+                    bottom: 10px;
+                    float: right;
+                    padding: 10px 15px;
+                    font-size: 14px;
+                    background-color: #007BFF;
+                    color: white;
+                    border: none;
+                    border-radius: 5px;
+                    cursor: pointer;
+                }
+                #backToTopButton1:hover {
+                    background-color: #0056b3;
+                }
+            </style>
+            <script>
+                const scrollArea1 = document.getElementById('scrollArea1');
+                const backToTopButton1 = document.getElementById('backToTopButton1');
+
+                backToTopButton1.addEventListener('click', () => {
+                    scrollArea1.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+                
+                // Pretty print the content from scrollButtonDemo1Preview to scrollButtonDemo1Code
+                prettyPrintToDiv("scrollButtonDemo1Preview", "scrollButtonDemo1Code");
+            </script>
+        </div>
+    </div>
+    <!-- End of scrollButtonDemo1 -->
+
+    <div class="examples-description">
+        <p>The second example uses JavaScript to create a button that only appears after the user has scrolled down the content a certain distance. Like in the previous example, the button is fixed to the bottom right corner of the viewport and smoothly scrolls the page back to the top when clicked.</p>
+        <p>However, because we've provided a user-definable custom attribute 'scroll-distance' (in pixels) for our button, it's good ettiquete to not use attach the attribute to a standard HTML button element, but to create our own custom HTML element that acts like a button.  This helps to avoid confusion for other developers who might expect the 'scroll-distance' attribute to be on a standard HTML button when it isn't.</p>
+    </div>
+    <!-- Start of scrollButtonDemo2 -->
+    <div class="examples-container" style="height: 320px !important;">
+        <div class="examples-code" id="scrollButtonDemo2Code"></div>
+        <div class="examples-preview" id="scrollButtonDemo2Preview">
+            <div id="scrollArea2">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+                <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+                <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+                <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                <back-to-top-button scroll-distance="100"></back-to-top-button>
+            </div>
+            <style>
+                #scrollArea2 {
+                    height: calc(100% - 20px); 
+                    overflow-y: scroll; 
+                    border: 1px solid #ccc; 
+                    padding: 10px;
+                }
+
+                #scrollArea2 p {
+                    margin: 0px 0px 15px 0px;
+                }
+
+                #backToTopButton2 {
+                    position: sticky;
+                    bottom: 10px;
+                    float: right;
+                    padding: 10px 15px;
+                    font-size: 14px;
+                    background-color: #007BFF;
+                    color: white;
+                    border: none;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    display: none;
+                }
+                #backToTopButton2:hover {
+                    background-color: #0056b3;
+                }
+            </style>
+            <script>
+                const scrollArea2 = document.getElementById('scrollArea2');
+                class BackToTopButton extends HTMLElement {
+                    constructor() {
+                        super();
+                        this.button = document.createElement('button');
+                        this.button.id = 'backToTopButton2';
+                        this.button.textContent = 'Back to Top';
+                        this.appendChild(this.button);
+
+                        this.button.addEventListener('click', () => {
+                            scrollArea2.scrollTo({ top: 0, behavior: 'smooth' });
+                        });
+                        this.scrollDistance = parseInt(this.getAttribute('scroll-distance')) || 100;
+                        scrollArea2.addEventListener('scroll', () => this.toggleBackToTopButton());
+                    }
+
+                    toggleBackToTopButton() {
+                        if (scrollArea2.scrollTop > this.scrollDistance) {
+                            this.button.style.display = 'block';
+                        } else {
+                            this.button.style.display = 'none';
+                        }
+                    }
+                }
+
+                customElements.define('back-to-top-button', BackToTopButton);
+
+                // Pretty print the content from scrollButtonDemo2Preview to scrollButtonDemo2Code
+                prettyPrintToDiv("scrollButtonDemo2Preview", "scrollButtonDemo2Code");
+            </script>
+        </div>
+    </div>
+    <!-- End of scrollButtonDemo2 -->
+     <div class="examples-description">
+        <p>The second button is much more flexible than the first in that, not only can the scroll distance be defined by the user, but the way in which the button appears can be customised by other means, such as fading in, sliding in, etc. You might also want to make it so that the scroll-distance attribute relates to a percentage of the vertical height scrolled, rather than a fixed pixel value.</p>
+        <p>For a more complete set of examples with code comments, please download the git repository found <a href="https://github.com/gittymo/backtotopbutton">HERE</a>.</p>
+        <p><a href="https://gittymo.github.io/" style="transform: translateY(-20px)">Back to Home</a></p>
+     </div>
+</div>
+</body>
+</html>

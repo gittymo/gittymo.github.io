@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Selectors</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f0f0f0;
+        }
+
+        div#subjects-container {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 1200px;
+            background-color: white;
+            padding: 20px;
+            height: calc(100vh - 40px);
+            box-sizing: border-box;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        div.playground {
+            border: 2px solid #ccc;
+            padding: 10px;
+            margin-top: 20px;
+            background-color: #f9f9f9;
+            display: flex;
+            gap: 20px;
+        }
+
+        div.playground textarea, div {
+            flex: 1;
+            box-sizing: border-box;
+            height: fit-content;
+        }
+
+        div.playground textarea {
+            font-family: monospace;
+            font-size: 14px;
+        }
+
+        section > h1 {
+            margin-top: 0;
+            background-color: #007BFF;
+            padding: 10px;
+            border-radius: 5px;
+            color: white;
+        }
+
+        section p,h2 {
+            line-height: 1.6;
+            padding: 0 5px;
+        }
+
+        button.next-page {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        button.next-page::after {
+            content: ' ➡';
+        }
+    </style>
+</head>
+<body>
+<div id="subjects-container">
+    <section id="introduction">
+    <h1>CSS Selectors</h1>
+    <p>CSS selectors are patterns used to select the elements you want to style.</p>
+    <h2>Types of CSS Selectors</h2>
+    <ul>
+        <li>Universal Selector: <code>*</code></li>
+        <li>Type Selector: <code>div</code></li>
+        <li>Class Selector: <code>.class-name</code></li>
+        <li>ID Selector: <code>#id-name</code></li>
+        <li>Attribute Selector: <code>[type="text"]</code></li>
+    </ul>
+    </section>
+    <section id="types-playground">
+        <h2>Playground</h2>
+        <p>Experiment with different CSS selectors in the code editor below - you will see the changes in the preview area:</p>
+        <div class="playground">
+            <textarea id="css-editor" style="width: 45%; height: 300px;"></textarea>
+            <div id="types-preview">
+                <h1>&lt;h1&gt;Types Playground Preview&lt;/h1&gt;</h1>
+                <p>&lt;p&gt;This is a paragraph&lt;/p&gt;</p>
+                <div class="box">&lt;div class="box"&gt;This is a box&lt;/div&gt;</div>
+                <button id="my-button">&lt;button id="my-button"&gt;Click Me&lt;/button&gt;</button><br>
+                <a target="_blank">&lt;a target="_blank"&gt;Link&lt;/a&gt;</a>
+            </div>
+            <script>
+                const cssEditor = document.getElementById('css-editor');
+                const typesPreview = document.getElementById('types-preview');
+
+                // Load initial CSS into the editor
+                cssEditor.value = `/* Write your CSS here */\n\n.box {\n    width: 100px;\n    height: 100px;\n    background-color: lightblue;\n    margin-top: 10px;\n}\n\n#my-button {\n    padding: 10px 20px;\n    background-color: green;\n    color: white;\n    border: none;\n    border-radius: 5px;\n    cursor: pointer;\n}`;
+
+                // Function to update the preview area with the CSS from the editor
+                function updatePreview() {
+                    let styleTag = document.getElementById('dynamic-styles');
+                    if (!styleTag) {
+                        styleTag = document.createElement('style');
+                        styleTag.id = 'dynamic-styles';
+                        document.head.appendChild(styleTag);
+                    }
+                    styleTag.innerHTML = cssEditor.value;
+                }
+
+                // Update preview on editor input
+                cssEditor.addEventListener('input', updatePreview);
+
+                // Initial preview update
+                updatePreview();
+            </script>
+        </div>
+    </section>
+    <p>Remember, that attribute selectors depend on the presence of the specified attribute in the HTML elements.  For example, in the playground, you can select the &lt;a&gt; element using the attribute selector <code>[target="_blank"]</code>.  You can even use the class and id attributes as CSS selectors by using [class] and [id], however, it is a lot quicker and easier to use the shorthand characters ('#' for id and '.' for class selectors).</p>
+    <p>
+        <a href="https://gittymo.github.io/" style="transform: translateY(-20px)">Back to Home</a>
+    </p>
+    <button class="next-page" onclick="location.href='css-box-model.html'">Next: CSS Box Model</button>
+</div>
+</body>
+</html>
