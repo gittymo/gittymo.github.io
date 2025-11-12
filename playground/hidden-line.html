@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rendering 3D Wireframe Polygons Using Hidden Line Removal</title>
+</head>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        background-color: #220b88;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    canvas {
+        border: 2px solid #fff;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    }
+</style>
+<script>
+    class Point3D {
+        constructor(x, y, z) {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+        }
+    }
+
+    class Polygon3D {
+        points = [];
+        origin;
+        #stroke;
+        #fill;
+
+        constructor(origin) {
+            if (!origin || origin === undefined) {
+                throw Error("Invalid origin point, cannot be null or undefined.");
+            }
+            if (!origin instanceof Point3D) {
+                throw Error("Origin point must be an instance of Point3D");
+            }
+            this.origin = origin;
+        }
+
+        addPoint(x, y, z) {
+            if (isNaN(x) || isNaN(y) || isNaN(z)) {
+                throw Error("Point must be three numeric values, relative to the origin point.");
+            }
+
+            // Make sure we don't already have a point with these values.
+            this.points.forEach((p) => {
+                if (p.x === x && p.y === y && p.z === z) return;
+            });
+
+            this.points.push(new Point3D(x, y, z));
+        }
+
+        /**
+         * Returns a new Polygon3D rotated about the specified axis by the given angle
+         * @param {string} axis - 'x', 'y', or 'z'
+         * @param {number} angle - rotation angle in radians
+         * @returns {Polygon3D} - new rotated polygon
+         */
+        rotate(xangle, yangle, zangle) {
+
+            const cos = Math.cos(angle);
+            const sin = Math.sin(angle);
+            const rotatedPolygon = new Polygon3D(this.origin);
+
+            this.points.forEach(point => {
+                let x = point.x;
+                let y = point.y;
+                let z = point.z;
+
+                if (xangle != 0) {
+                    // Rotation about X-axis
+                    let ty = y;
+                    y = ty * cos - z * sin;
+                    z = ty * sin + z * cos;
+                }
+                
+                if (yangle != 0) {
+                    let tx = x;
+                    // Rotation about Y-axis
+                    x = tx * cos + z * sin;
+                    z = -tx * sin + z * cos;
+                }
+
+                if (zangle != 0) {
+                    // Rotation about Z-axis
+                    let tx = x;
+                    x = tx * cos - y * sin;
+                    y = tx * sin + y * cos;
+                }
+
+                rotatedPolygon.points.push(new Point3D(x, y, z));
+            });
+
+            return rotatedPolygon;
+        }
+
+        scale(xscale, yscale, zscale) {
+            const scaledPolygon = new Polygon3D(this.origin);
+
+            this.points.forEach(point => {
+                scaledPolygon.points.push(new Point3D(x * xscale, y * yscale, z * zscale));
+            });
+
+            return scaledPolygon;
+        }
+
+        translate(x, y, z) {
+            const translatedPolygon = new Polygon3D(new Point3D(this.origin.x + x, this.origin.y + y, this.origin.z + z));
+
+            this.points.forEach(point => {
+                translatedPolygon.points.push(new Point3D(point.x + x, point.y + y, point.z + z));
+            });
+        }
+
+        set Stroke(value) {
+            this.#stroke = value;
+        }
+
+        get Stroke() {
+            return this.#stroke;
+        }
+
+        set Fill(value) {
+            this.#fill = value;
+        }
+
+        get Fill() {
+            return this.#fill;
+        }
+
+        set Origin(value) {
+            if (!value instanceof Point3D) {
+                throw Error("Origin must be an instance of Point3D");
+                this.origin = value;
+            }
+        }
+
+        get Origin() {
+            return this.origin;
+        }
+
+        /**
+         * Renders the polygon on a 2D canvas context
+         * @param {CanvasRenderingContext2D} ctx - the canvas rendering context
+         * @param {number} focalLength - distance from viewer to projection plane (default: 300)
+         */
+        render(ctx, focalLength = 300) {
+            if (!ctx || !ctx.canvas) {
+                throw Error("Invalid canvas context");
+            }
+            if (this.points.length < 3) {
+                return; // Need at least 3 points to render a polygon
+            }
+
+            ctx.beginPath();
+
+            // Project first point and move to it
+            const firstPoint = this.projectPoint(this.points[0], focalLength, ctx.canvas.width, ctx.canvas.height);
+            ctx.moveTo(firstPoint.x, firstPoint.y);
+
+            // Project and draw lines to remaining points
+            for (let i = 1; i < this.points.length; i++) {
+                const projectedPoint = this.projectPoint(this.points[i], focalLength, ctx.canvas.width, ctx.canvas.height);
+                ctx.lineTo(projectedPoint.x, projectedPoint.y);
+            }
+
+            ctx.closePath();
+
+            // Fill if fill color is set
+            if (this.#fill) {
+                ctx.fillStyle = this.#fill;
+                ctx.fill();
+            }
+
+            // Stroke if stroke color is set
+            if (this.#stroke) {
+                ctx.strokeStyle = this.#stroke;
+                ctx.stroke();
+            }
+        }
+
+        /**
+         * Projects a 3D point to 2D screen coordinates
+         * @param {Point3D} point - the 3D point to project
+         * @param {number} focalLength - distance from viewer to projection plane
+         * @param {number} canvasWidth - width of the canvas
+         * @param {number} canvasHeight - height of the canvas
+         * @returns {Object} - object with x and y screen coordinates
+         */
+        projectPoint(point, focalLength, canvasWidth, canvasHeight) {
+            // Add origin offset to point
+            const worldX = this.origin.x + point.x;
+            const worldY = this.origin.y + point.y;
+            const worldZ = this.origin.z + point.z;
+
+            // Perspective projection
+            const scale = focalLength / (focalLength + worldZ);
+            const screenX = worldX * scale + canvasWidth / 2;
+            const screenY = worldY * scale + canvasHeight / 2;
+
+            return { x: screenX, y: screenY };
+        }
+    }
+
+    function init() {
+        var cnv = document.getElementById("hiddenLineCanvas");
+        if (!cnv) return;
+        var ctx = cnv.getContext("2d");
+        if (!ctx) return;
+
+        let p3d = new Polygon3D(new Point3D(400, 300, 0));
+        p3d.addPoint(-50, -50, 0);
+        p3d.addPoint(50, -50, 0);
+        p3d.addPoint(50, 50, 0);
+        p3d.addPoint(-50, 50, 0);
+        p3d.Stroke = "white";
+
+        p3d.render(ctx);
+    }
+
+</script>
+<body onload="init()">
+    <canvas id="hiddenLineCanvas" width="800" height="600"></canvas>
+</body>
+</html>

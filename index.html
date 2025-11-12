@@ -3,90 +3,232 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Morgan's Homepage</title>
-    <style>
+    <title>Morgan Evans: Homepage</title>
+</head>
+<style>
+    :root {
+        --link-hover-color: steelblue;
+    }
+    body {
+        margin: 0 auto;
+        padding: 20px;
+        background: black;
+        color: white;
+        display: grid;
+        grid-template-columns: 2fr 5fr;
+        grid-template-rows: auto 600px auto;
+        gap: 20px;
+        height: 100vh;
+        width: 1280px;
+        box-sizing: border-box;
+        align-content: center;
+        font-family:Verdana, Geneva, Tahoma, sans-serif;
+    }
 
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: #e0e0e0;
-        }
+    .top-bar {
+        grid-column-start: 1;
+        grid-column-end: 3;
+        grid-row: 1;
+        display: grid;
+        grid-template-columns: 1fr 3fr 1fr;
 
-        main {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            width: 80%;
-            border: 2px solid #ccc;
-            padding: 20px;
+        > nav {
+            display: flex;
+            flex-direction: row;
+            justify-self: center;
+            width: fit-content;
+            grid-column: 2;
             box-sizing: border-box;
-            background-color: #fff;
-            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
+            padding: 0;
+            margin: 0;
+            anchor-name: --hovered-link;
+
+            &::after {
+                content: '';
+                position: absolute;
+                left: anchor(left);
+                right: anchor(right);
+                bottom: anchor(bottom);
+                height: 4px;
+                background: var(--link-hover-color);
+                position-anchor: --hovered-link;
+                transition: left 300ms, right 300ms, bottom 300ms, background 300ms;
+                border-radius: 4px;
+            }
+
+            > ul {
+                display: flex;
+                justify-content: center;
+                flex-direction: row;
+                list-style: none;
+                padding: 0;
+                margin: 0;
+
+                > li {
+                    padding: 10px;
+
+                    > a {
+                        color: white;
+                        text-decoration: none;
+                        padding: 0;
+                        margin: 0;
+                    }
+                }
+
+                > li:hover {
+                    anchor-name: --hovered-link;
+                }
+            }
         }
 
-        body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-            background-color: #f9f9f9;
-            color: #333;
+        > div.social {
+            grid-column: 3;
+            justify-self: end;
+            display: flex;
+            flex-direction: row;
+            align-self: baseline;
+            gap: 10px;
+
+            > a {
+                text-decoration: none;
+                padding: 0;
+                margin: 0;
+            }
+
+            > a img {
+                width: 36px;
+                height: 36px;
+                border-radius: 4px;
+                margin: 0;
+                padding: 0;
+            }
+        }
+    }
+
+    .sub-links,.main-content {
+        padding: 10px;
+        box-sizing: border-box;
+    }
+
+    .sub-links {
+        grid-column: 1;
+        grid-row: 2;
+
+        > h1 {
+            margin: 1em 0 0.5em 0;
+            padding: 0;
+            font-size: 1.5em;
         }
 
-        h1 {
-            color: #2c3e50;
+        > p {
+            margin: 5px 0;
+            padding: 0;
+
+            > a {
+                color: var(--link-hover-color);
+                text-decoration: underline;
+            }
         }
 
-        h2 {
-            color: #34495e;
+        > ul {
+            list-style: disc;
+            margin-left: 20px;
+
+            > li {
+                margin-bottom: 5px;
+
+                > a {
+                    color: var(--link-hover-color);
+                    text-decoration: underline;
+                }
+            }
+        }
+    }
+
+    .main-content {
+        grid-column: 2;
+        grid-row: 2;
+
+        > h1 {
+            margin: 1em 0 0.5em 0;
+            padding: 0;
+            font-size: 1.5em;
         }
 
-        a {
-            color: #2980b9;
-            text-decoration: none;
-        }
+        > ul {
+            list-style: disc;
+            margin-left: 20px;
 
-        a:hover {
+            > li {
+                margin-bottom: 5px;
+
+                > a {
+                    color: var(--link-hover-color);
+                    text-decoration: underline;
+                }
+            }
+        }
+    }
+
+    .bottom-bar {
+        grid-column-start: 1;
+        grid-column-end: 3;
+        grid-row: 3;
+
+        > a {
+            color: var(--link-hover-color);
             text-decoration: underline;
         }
-
-        p { 
-            margin: 0;
-        }
-    </style>
-</head>
+    }
+</style>
 <body>
-    <main>
-    <h1>Welcome to Morgan's Homepage</h1>
-    <p>This is the main landing page for my personal site and my work portfolio.  I also use it as a learning resource for my son, Warrick, who is currently studying computer science.</p>
-    <p>I'm afraid there's not much too see at the moment, as I'm working on web development tutorials for him, currently.</p>
+    <div class="top-bar">
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About Me</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="tutorials.html">Tutorials</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+        <div class="social">
+            <a href="https://www.linkedin.com/in/morgan-evans-31ab90195" target="_blank"><img src="./images/icons/icons8-linkedin-96.png"></a>
+            <a href="https://github.com/gittymo" target="_blank"><img src="./images/icons/icons8-github-96.png" style="background-color: white;"></a>
+            <a href="https://www.facebook.com/FaceMorgan" target="_blank"><img src="./images/icons/icons8-facebook-96.png"></a>
+        </div>
+    </div>
+    <div class="sub-links">
+        <p>This section will eventually contain links relavant to the page you are currently viewing.</p>
+        <p>The following links are for temporary and are in place for web development guidance for my son, Warrick:</p>
+        <h1>Git</h1>
+        <p>You can use the link at the top right of this site to access my GitHub profile.</p>
+        <p>Downloads and instructions for using git can be found <a href="https://git-scm.com/downloads" target="_blank">here</a>.</p>
+        <p>An introduction to using git and GitHub in Visual Studio Code can be found <a href="https://code.visualstudio.com/docs/sourcecontrol/intro-to-git">here</a>.</p>
+        <h1>Web Development Links</h1>
+        <p>Various links for learning web development (MDN is great for in-depth understanding):</p>
+        <ul>
+            <li><a href="https://developer.mozilla.org/en-US">Mozilla Developer Network (MDN)</a>
+            <li><a href="https://www.w3schools.com/">W3Schools</a></li>
+            <li><a href="https://css-tricks.com/">CSS-Tricks</a></li>
+            <li><a href="https://learnhtmlcss.online/">Learn HTML & CSS</a></li>
+            <li><a href="https://skillcrush.com/category/learn-to-code/">Skillcrush</a></li>
+            <li><a href="https://stackoverflow.com/">Stack Overflow</a></li>
+        </ul>
 
-    <h2>Here's What There Is Currently</h2>
-    <ul>
-        <li><a href="learn/web/css-selectors.html">CSS Selectors Tutorial</a></li>
-        <li><a href="examples/web/navigation/back-to-top-button.html">A page describing solutions for a web button that takes the user back to the top of the current page.</a></li>
-    </ul>
+    </div>
+    <div class="main-content">
+        <h1>Welcome to Morgan's Homepage</h1>
+        <p>This is the main landing page for my personal site and my work portfolio.  I also use it as a learning resource for my son, Warrick, who is currently studying computer science.</p>
+        <p>I'm afraid there's not much too see at the moment, as I'm working on web development tutorials for him, currently. Feel free to play with the navigation links at the top of the page - they don't do anything yet, but I like the effect!</p>
 
-    <h2>Some Useful Learning Resources</h2>
-    <ul>
-        <li><a href="https://developer.mozilla.org/en-US">Mozilla Developer Network (MDN)</a> - a great resource for web development documentation and tutorials.</li>
-        <li><a href="https://www.w3schools.com/">W3Schools</a> - another excellent resource for learning web technologies.</li>
-        <li><a href="https://css-tricks.com/">CSS-Tricks</a> - a website dedicated to tips and tricks about CSS.</li>
-        <li><a href="https://learnhtmlcss.online/">Learn HTML & CSS</a> - an interactive platform to learn HTML and CSS from scratch.</li>
-        <li><a href="https://skillcrush.com/category/learn-to-code/">Skillcrush</a> - a website offering coding courses and resources for beginners.</li>
-        <li><a href="https://stackoverflow.com/">Stack Overflow</a> - a community-driven Q&A site for programming-related questions.</li>
-    </ul>
-
-    <h2>Cloning GitHub Repositories</h2>
-    <p>If you wish to clone any of my repositories from GitHub, you can find them at <a href="https://github.com/gittymo">my GitHub profile</a>.</p>
-    <p>If you want to clone a repository, you <em>might</em> need to install git. You can find instructions for installing git on the <a href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git">official Git website</a>.</p><br>
-    <p>Once you have git installed, you can clone a repository using the following command:</p>
-    <pre><code>git clone https://github.com/gittymo/repository-name.git</code></pre> or you can usually clone a repository directly in popular code editors like Visual Studio Code or IDEs like IntelliJ IDEA.</p><br>
-    <p>Don't forget to replace <code>repository-name</code> with the actual name of the repository you want to clone!</p>
-    <p>After cloning, you should be able to open the project in your code editor and start working on it.</p><br>
-    <p>And Have fun!</p>
-    <h2>More content coming soon!</h2>
-    <p>I am actively looking to create a new portfolio section to showcase my work and projects, and I will be posting more tutorials here, so please watch this space!</p>
-    </main>
+        <h1>Here's What There Is Currently</h1>
+        <ul>
+            <li><a href="learn/web/css-selectors.html">CSS Selectors Tutorial</a></li>
+            <li><a href="examples/web/navigation/back-to-top-button.html">A page describing solutions for a web button that takes the user back to the top of the current page.</a></li>
+        </ul>
+    </div>
+    <div class="bottom-bar">&copy;2005 Morgan Evans - <a target="_blank" href="https://icons8.com/icon/xuvGCOXi8Wyg/linkedin">LinkedIn, GitHub and Facebook</a> icons by <a target="_blank" href="https://icons8.com">Icons8</a></div>
 </body>
 </html>

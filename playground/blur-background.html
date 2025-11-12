@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demonstrate Element With A Blurred Background</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Parisienne&display=swap" rel="stylesheet">
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+            background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80') no-repeat center center fixed;
+            background-size: cover;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .blurred-box {
+            position: relative;
+            width: 640px;
+            height: 480px;
+            background-image: radial-gradient(circle at 75% 35%, rgba(255,255,255,0.5), transparent 70%),
+                                linear-gradient(rgba(0,0,0,0.2), transparent 0.75%, transparent 99.25%, rgba(255,255,255,0.4) 100%);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            border: 2px solid transparent;
+            background-origin: padding-box, border-box;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            box-sizing: border-box;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+        }
+
+        .blurred-box h1 {
+            position: absolute;
+            right: 20px;
+            bottom: 20px;
+            font-family: "Parisienne", cursive;
+            font-weight: 400;
+            font-style: normal;
+            color: black;
+            margin: 0;
+            text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .blurred-box p {
+            color: #000;
+            line-height: 1.4;
+            margin-bottom: 1em;
+            margin-top: 0;
+        }
+
+        code.blurred-box {
+            display: inline-block !important;
+            width: fit-content !important;
+            height: fit-content !important;
+            padding: 0px 2px !important;
+            border-radius: 4px !important;
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
+            background-image: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="blurred-box">
+        <p>A demonstration of frosted glass effect using Cascading Style Sheets.</p>
+        <p>The main <code class="blurred-box">&lt;div&gt;</code> element used to create the box makes use of two background layers - a radial gradient to add sheen to the body, 
+            a linear gradient for the border and a blur backdrop filter.  The heading is positioned absolutely at the bottom right of the box and uses the CSS property text-shadow to give a slightly diffuse effect to the font.</p>
+        <p>The body uses a sans-serif font (Verdana, Geneva, Tahoma, sans-serif) and the header uses "Parisienne", cursive from Google Fonts.</p>
+        <p><code class="blurred-box">&lt;code&gt;</code> elements inside the box also have a slight cumulative blur effect and linear gradient border and shadow to match the overall frosted glass appearance, although the overall effect of these has been lessened to avoid making them contrast too heavily against the rest of the content, whilst still allowing the background to show through.</p>
+        <h1>Glass Effect Box</h1>
+    </div>
+</body>
+</html>
