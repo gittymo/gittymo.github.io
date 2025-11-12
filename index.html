@@ -105,29 +105,15 @@
         }
     }
 
-    .sub-links,.main-content {
+    .sub-links,.main-content,.bottom-bar {
         padding: 10px;
         box-sizing: border-box;
-    }
-
-    .sub-links {
-        grid-column: 1;
-        grid-row: 2;
-
-        > h1 {
-            margin: 1em 0 0.5em 0;
-            padding: 0;
-            font-size: 1.5em;
-        }
+        font-size: 0.9em;
+        text-align: justify;
 
         > p {
             margin: 5px 0;
             padding: 0;
-
-            > a {
-                color: var(--link-hover-color);
-                text-decoration: underline;
-            }
         }
 
         > ul {
@@ -136,18 +122,8 @@
 
             > li {
                 margin-bottom: 5px;
-
-                > a {
-                    color: var(--link-hover-color);
-                    text-decoration: underline;
-                }
             }
         }
-    }
-
-    .main-content {
-        grid-column: 2;
-        grid-row: 2;
 
         > h1 {
             margin: 0 0 0.5em 0;
@@ -155,30 +131,30 @@
             font-size: 1.5em;
         }
 
-        > ul {
-            list-style: disc;
-            margin-left: 20px;
-
-            > li {
-                margin-bottom: 5px;
-
-                > a {
-                    color: var(--link-hover-color);
-                    text-decoration: underline;
-                }
-            }
+        > p + h1 {
+            margin-top: 1em;
         }
+
+        a {
+            color: var(--link-hover-color);
+            text-decoration: underline;
+        }
+    }
+
+    .sub-links {
+        grid-column: 1;
+        grid-row: 2;
+    }
+
+    .main-content {
+        grid-column: 2;
+        grid-row: 2;
     }
 
     .bottom-bar {
         grid-column-start: 1;
         grid-column-end: 3;
-        grid-row: 3;
-
-        > a {
-            color: var(--link-hover-color);
-            text-decoration: underline;
-        }
+        grid-row: 3; 
     }
 </style>
 <body>
@@ -195,12 +171,12 @@
         </nav>
         <div class="social">
             <a href="https://www.linkedin.com/in/morgan-evans-31ab90195" target="_blank"><img src="./images/icons/icons8-linkedin-96.png"></a>
-            <a href="https://github.com/gittymo" target="_blank"><img src="./images/icons/icons8-github-96.png" style="background-color: white;"></a>
+            <a href="https://github.com/gittymo" target="_blank"><img src="./images/icons/icons8-github-96.png" style="background-image: radial-gradient(circle at 50% 60%, white, white 35%, transparent"></a>
             <a href="https://www.facebook.com/FaceMorgan" target="_blank"><img src="./images/icons/icons8-facebook-96.png"></a>
         </div>
     </div>
     <div class="sub-links">
-        <p>This section will eventually contain links relavant to the page you are currently viewing.</p>
+        <p>This section will eventually contain links relavant to the page you are viewing.</p>
         <p>The following links are temporary and are in place for web development guidance:</p>
         <h1>Git</h1>
         <p>You can use the link at the top right of this site to access my GitHub profile.</p>

@@ -1,0 +1,75 @@
+function BreakText(element, chance = 5) {
+    // Make sure chance has a sensible value, if it is set.
+    if (isNaN(chance) || chance < 2) chance = 5;
+    // Make sure the calling method has passed a valid <p> element reference.
+    if (!element || element === undefined || !element instanceof HTMLParagraphElement) return;
+    // This function will insert <span style="broken-text"> entries into the textual content of the given <p> element.
+    // It is meant to give the text a more chaotic look.
+    // There are three ways that the span can affect the text:
+    // 1)   The span will use the text of a whole word (including punctuation).
+    // 2)   The span will start at a random character within one word and will last for a random number of characters,
+    //      even if those characters form part of other words.
+    // 3)   The span will start at a random character within a word and will randomly change sets of characters in that
+    //      word only.
+
+    // Get the text content of the element.
+    const elementText = element.innerText;
+    // If the element has no inner text, return.
+    if (elementText.length == 0) return;
+
+    var i = 0;
+    var newElementText = '';
+    while (i < elementText.length) {
+        // Just add any non-word content to the new element text.
+        while (i < elementText.length && !/^[a-zA-Z0-9]$/.test(elementText.charAt(i))) {
+            newElementText += elementText.charAt(i++);
+        }
+
+        // We're at the start of a word, so we can potentially add our span here - however, we have to roll the chance dice 
+        // and hit 1.
+        const chanceRoll = Math.round(Math.random() * (chance));
+        if (chanceRoll != 1) {
+            // If we've not rolled a two, go to the next word.
+            while (i < elementText.length && /^[a-zA-Z0-9.,\-!?()]$/.test(elementText.charAt(i))) {
+                newElementText += elementText.charAt(i++);
+            }
+            continue;
+        }
+
+        // Get the length of the word.
+        var j = i;
+        while (j < elementText.length && /^[a-zA-Z0-9.,\-!?()]$/.test(elementText.charAt(j))) j++;
+        const wordLength = j - i;
+
+        // Determine if we're going to be doing a whole word or just affecting 'n' number of characters from character index 'm'
+        // in the word.
+        const wrapWholeWord = Math.round(Math.random() + 1) == 1;
+
+        // If it's the whole word that we're going to wrap with a span, then do that.
+        if (wrapWholeWord) {
+            newElementText += "<span class='broken-text'>";
+            while (i < j) newElementText += elementText.charAt(i++);
+            newElementText += "</span>";
+        } else {
+            // Otherwise, decide on a random offset into the word and then a random number of characters from that offset
+            // to wrap with the span.
+            const randomOffset = Math.round(Math.random() * (wordLength - 1));
+            const randomCharLength = Math.round(Math.random() * 10) + 1;
+            // Add any word characters that come before the offset to the new element text.
+            j = i + randomOffset;
+            while (i < j) newElementText += elementText.charAt(i++);
+            // Add the broken text span containing randomCharLength characters from the original text.
+            newElementText += "<span class='broken-text'>";
+            j += randomCharLength;
+            while (i < j) newElementText += elementText.charAt(i++);
+            newElementText += "</span>";
+            // If we're not at the end of a word, keep adding characters to the new element text until we find it.
+            while (i < elementText.length && /^[a-zA-Z0-9.,\-!?()]$/.test(elementText.charAt(i))) {
+                newElementText += elementText.charAt(i++);
+            }
+        }
+    }
+
+    // Set the new inner text for the element.
+    element.innerHTML = newElementText;
+}

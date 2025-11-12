@@ -1,0 +1,76 @@
+/*  global.css
+    Global stylesheets used throughout the site.
+    (C)2025 Morgan Evans */
+
+:root {
+    --theme-colour-rich-black: #030d22;
+    --theme-colour-rich-black-accent: #341288;
+    --theme-colour-true-blue: #576ca8;
+    --theme-colour-white-smoke: #f5f3f5;
+    --theme-colour-grotbags: #9bc53d;
+    --theme-colour-cinnebar: #e55934;
+    --theme-colour-goldbags: #ffd418;
+    --theme-colour-bluebags: #18b4df;
+    --theme-colour-rodsuit: #ff18d4;
+}
+
+body {
+    background-color: var(--theme-colour-rich-black);
+    padding: 0;
+    margin:0;
+}
+
+main {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    height: 80%;
+    margin: 0px;
+    padding: 20px;
+    background: conic-gradient( from 170deg, 
+                                var(--theme-colour-rich-black-accent),
+                                var(--theme-colour-rodsuit),
+                                var(--theme-colour-cinnebar),
+                                var(--theme-colour-goldbags),
+                                var(--theme-colour-cinnebar),
+                                var(--theme-colour-rodsuit),
+                                var(--theme-colour-rich-black-accent),
+                                var(--theme-colour-rich-black),
+                                var(--theme-colour-rich-black-accent)
+                              );
+    border-radius: 4px;
+    box-sizing: border-box;
+    color: var(--theme-colour-goldbags);
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+main::before {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    background-color: var(--theme-colour-rich-black);
+    border-radius: 2px;
+    z-index: -1;
+}
+
+.broken-text {
+    font-family: 'Rubik ISO', system-ui;
+}
+
+h1.broken-text {
+    text-shadow: 1px 1px 4px rgba(255, 30, 192, 0.75);
+}
+
+p.broken-text {
+    text-shadow: 1px 1px 4px var(--theme-colour-goldbags);
+}
+
+main h1 {
+    margin-top: 0;
+}
+
+main p {
+    text-align: justify;
+}
