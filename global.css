@@ -1,76 +1,150 @@
-/*  global.css
-    Global stylesheets used throughout the site.
-    (C)2025 Morgan Evans */
-
 :root {
-    --theme-colour-rich-black: #030d22;
-    --theme-colour-rich-black-accent: #341288;
-    --theme-colour-true-blue: #576ca8;
-    --theme-colour-white-smoke: #f5f3f5;
-    --theme-colour-grotbags: #9bc53d;
-    --theme-colour-cinnebar: #e55934;
-    --theme-colour-goldbags: #ffd418;
-    --theme-colour-bluebags: #18b4df;
-    --theme-colour-rodsuit: #ff18d4;
+    --link-hover-color: steelblue;
 }
-
 body {
-    background-color: var(--theme-colour-rich-black);
-    padding: 0;
-    margin:0;
-}
-
-main {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 80%;
-    height: 80%;
-    margin: 0px;
+    margin: 0 auto;
     padding: 20px;
-    background: conic-gradient( from 170deg, 
-                                var(--theme-colour-rich-black-accent),
-                                var(--theme-colour-rodsuit),
-                                var(--theme-colour-cinnebar),
-                                var(--theme-colour-goldbags),
-                                var(--theme-colour-cinnebar),
-                                var(--theme-colour-rodsuit),
-                                var(--theme-colour-rich-black-accent),
-                                var(--theme-colour-rich-black),
-                                var(--theme-colour-rich-black-accent)
-                              );
-    border-radius: 4px;
+    background: black;
+    color: white;
+    display: grid;
+    grid-template-columns: 2fr 6fr;
+    grid-template-rows: auto 600px auto;
+    gap: 20px;
+    height: 100vh;
+    width: 1280px;
     box-sizing: border-box;
-    color: var(--theme-colour-goldbags);
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    align-content: center;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
 }
 
-main::before {
-    content: '';
-    position: absolute;
-    inset: 4px;
-    background-color: var(--theme-colour-rich-black);
-    border-radius: 2px;
-    z-index: -1;
+.top-bar {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-row: 1;
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+
+    > nav {
+        display: flex;
+        flex-direction: row;
+        justify-self: center;
+        width: fit-content;
+        grid-column: 2;
+        box-sizing: border-box;
+        padding: 0;
+        margin: 0;
+        anchor-name: --hovered-link;
+
+        &::after {
+            content: '';
+            position: absolute;
+            left: anchor(left);
+            right: anchor(right);
+            bottom: anchor(bottom);
+            height: 4px;
+            background: var(--link-hover-color);
+            position-anchor: --hovered-link;
+            transition: left 300ms, right 300ms, bottom 300ms, background 300ms;
+            border-radius: 4px;
+        }
+
+        > ul {
+            display: flex;
+            justify-content: center;
+            flex-direction: row;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+
+            > li {
+                padding: 10px;
+
+                > a {
+                    color: white;
+                    text-decoration: none;
+                    padding: 0;
+                    margin: 0;
+                }
+            }
+
+            > li:hover {
+                anchor-name: --hovered-link;
+            }
+        }
+    }
+
+    > div.social {
+        grid-column: 3;
+        justify-self: end;
+        display: flex;
+        flex-direction: row;
+        align-self: baseline;
+        gap: 10px;
+
+        > a {
+            text-decoration: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        > a img {
+            width: 36px;
+            height: 36px;
+            border-radius: 4px;
+            margin: 0;
+            padding: 0;
+        }
+    }
 }
 
-.broken-text {
-    font-family: 'Rubik ISO', system-ui;
-}
-
-h1.broken-text {
-    text-shadow: 1px 1px 4px rgba(255, 30, 192, 0.75);
-}
-
-p.broken-text {
-    text-shadow: 1px 1px 4px var(--theme-colour-goldbags);
-}
-
-main h1 {
-    margin-top: 0;
-}
-
-main p {
+.sub-links,.main-content,.bottom-bar {
+    padding: 10px;
+    box-sizing: border-box;
+    font-size: 0.9em;
     text-align: justify;
+
+    > p {
+        margin: 5px 0;
+        padding: 0;
+    }
+
+    > ul {
+        list-style: disc;
+
+        > li {
+            text-align: left;
+            margin-bottom: 5px;
+        }
+    }
+
+    > h1 {
+        margin: 0 0 0.5em 0;
+        padding: 0;
+        font-size: 1.5em;
+    }
+
+    > p + h1 {
+        margin-top: 1em;
+    }
+
+    a {
+        color: var(--link-hover-color);
+        text-decoration: underline;
+    }
+}
+
+.sub-links {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+.main-content {
+    grid-column: 2;
+    grid-row: 2;
+}
+
+.bottom-bar {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-row: 3; 
 }
