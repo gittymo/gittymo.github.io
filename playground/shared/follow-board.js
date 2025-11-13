@@ -42,11 +42,19 @@ class FollowBoard extends HTMLElement {
         baseDiv.style.setProperty('--anim-speed', animspeed + 'ms');
         
         // Generate random colors for each cell position up to squares count
-        const randomColor = () => {
-            const r = Math.floor(Math.random() * 256);
-            const g = Math.floor(Math.random() * 256);
-            const b = Math.floor(Math.random() * 256);
-            return `rgb(${r}, ${g}, ${b})`;
+        const randomDarkColor = () => {
+            const r = Math.floor(Math.random() * 64);
+            const g = Math.floor(Math.random() * 64);
+            const b = Math.floor(Math.random() * 64);
+            return { r, g, b };
+        };
+
+        const lightenColor = (color, factor = 1.8) => {
+            return {
+                r: Math.min(255, Math.floor(color.r * factor)),
+                g: Math.min(255, Math.floor(color.g * factor)),
+                b: Math.min(255, Math.floor(color.b * factor))
+            };
         };
         
         // Create a style element for color rules
@@ -54,10 +62,17 @@ class FollowBoard extends HTMLElement {
         let colorRules = '';
         
         for (let i = 1; i <= squares; i++) {
-            const color = randomColor();
+            const darkColor = randomDarkColor();
+            const lightColor = lightenColor(darkColor);
+            const darkColorStr = `rgb(${darkColor.r}, ${darkColor.g}, ${darkColor.b})`;
+            const lightColorStr = `rgb(${lightColor.r}, ${lightColor.g}, ${lightColor.b})`;
+            
             colorRules += `
+                follow-board > div > span:nth-child(${(squares + 1)}n+${i}) {
+                    background-color: ${darkColorStr};
+                }
                 follow-board > div:has(span:nth-child(${(squares + 1)}n+${i}):hover)::after {
-                    background-color: ${color};
+                    background-color: ${lightColorStr};
                 }
             `;
         }

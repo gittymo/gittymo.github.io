@@ -109,6 +109,7 @@ body {
 }
 
 .sub-links,.main-content,.bottom-bar {
+    position: relative;
     padding: 10px;
     box-sizing: border-box;
     font-size: 0.9em;
@@ -118,10 +119,16 @@ body {
         margin: 0;
         margin-bottom: 0.75em;
         padding: 0;
+        position: relative;
+        z-index: 1;
+        pointer-events: none;
     }
 
     > ul {
         list-style: disc;
+        position: relative;
+        z-index: 1;
+        pointer-events: none;
 
         > li {
             text-align: left;
@@ -134,6 +141,9 @@ body {
         padding: 0;
         font-size: 1.5em;
         text-align: left;
+        position: relative;
+        z-index: 1;
+        pointer-events: none;
     }
 
     > p + h1 {
@@ -143,6 +153,30 @@ body {
     a {
         color: var(--link-hover-color);
         text-decoration: underline;
+        pointer-events: auto;
+    }
+
+    > div.follow-board-background {
+        position: absolute;
+        display: flex;
+        left:0;
+        top:0;
+        right:0;
+        bottom:0;
+        margin:0;
+        padding:0;
+        box-sizing: border-box;
+        z-index: 0;
+        justify-content: center;
+        align-items: center;
+    }
+
+    follow-board {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 480px;
     }
 }
 
