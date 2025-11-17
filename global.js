@@ -73,3 +73,34 @@ function BreakText(element, chance = 5) {
     // Set the new inner text for the element.
     element.innerHTML = newElementText;
 }
+
+function initFilterButtons() {
+    const filterButtons = document.getElementsByClassName('filter-button');
+    for (let i = 0; i < filterButtons.length; i++) {
+        filterButtons[i].addEventListener('click', function () {
+            const catFilter = this.getAttribute('cat-filter');
+            filterContentByCategory(catFilter);
+            // Set the class style active-filter only on the clicked button.
+            for (let j = 0; j < filterButtons.length; j++) {
+                filterButtons[j].classList.remove('active-filter');
+            }
+            this.classList.add('active-filter');
+        });
+    }
+}
+
+function filterContentByCategory(category) {
+    const contentItems = document.getElementsByClassName('content-item');
+    for (let i = 0; i < contentItems.length; i++) {
+        const itemCategories = contentItems[i].getAttribute('cat-filter').split(' '); 
+        if (itemCategories.includes(category) || category === 'all') {
+            contentItems[i].style.display = 'block';
+        } else {
+            contentItems[i].style.display = 'none';
+        }
+    }
+}
+
+function init() {
+    initFilterButtons();
+}
