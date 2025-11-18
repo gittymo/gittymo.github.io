@@ -27,13 +27,23 @@ class FollowBoard extends HTMLElement {
         if (isNaN(squares) || squares < 2) {
             throw Error("Squares must be a number of value 2 or greater.");
         }
+
         const animspeed = parseInt(this.getAttribute('speed')) || 300;
-        if (isNaN(squares) || animspeed < 0) {
+        if (isNaN(animspeed) || animspeed < 0) {
             throw Error("Speed must be a number greater than or equal to zero (0).");
         }
+
+        const brightness = parseInt(this.getAttribute('brightness')) || 255;
+        if (isNaN(brightness) || brightness < 4) {
+            throw Error("Brightness must be a number greater than or equal to four (4).");
+        } 
         
         const baseDiv = document.createElement('div');
         
+        // Set the board background colour to match the given brightness level.
+        baseDiv.style.setProperty('--board-background', 'rgb(' + brightness + ', ' + brightness + ', ' + brightness + ')');
+
+
         // Calculate cell size based on the follow-board width
         // Use clientWidth or offsetWidth for more reliable dimensions
         const boardWidth = this.offsetWidth || this.clientWidth || parseInt(getComputedStyle(this).width) || 800;
@@ -43,9 +53,9 @@ class FollowBoard extends HTMLElement {
         
         // Generate random colors for each cell position up to squares count
         const randomDarkColor = () => {
-            const r = Math.floor(Math.random() * 64);
-            const g = Math.floor(Math.random() * 64);
-            const b = Math.floor(Math.random() * 64);
+            const r = Math.floor(Math.random() * brightness);
+            const g = Math.floor(Math.random() * brightness);
+            const b = Math.floor(Math.random() * brightness);
             return { r, g, b };
         };
 
@@ -56,7 +66,7 @@ class FollowBoard extends HTMLElement {
                 b: Math.min(255, Math.floor(color.b * factor))
             };
         };
-        
+
         // Create a style element for color rules
         const styleEl = document.createElement('style');
         let colorRules = '';
