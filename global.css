@@ -193,7 +193,8 @@ body {
 .sub-links {
     grid-column: 1;
     grid-row: 2;
-
+    font-size: 0.8em;
+    
     > button {
         padding: 2px 4px;
         margin-bottom: 10px;
