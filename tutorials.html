@@ -39,7 +39,7 @@
             <a href="https://www.facebook.com/FaceMorgan" target="_blank"><img src="./images/icons/icons8-facebook-96.png"></a>
         </div>
     </div>
-    <div class="sub-links">
+    <div class="sub-links" id="content">
         <h2>What's New?</h2>
         <button class="filter-button active-filter" cat-filter="all">All</button>
         <button class="filter-button" cat-filter="tools">Tools</button>
@@ -67,9 +67,12 @@
             <p><strong>Link:</strong> An introduction to using git and GitHub in Visual Studio Code can be found <a href="https://code.visualstudio.com/docs/sourcecontrol/intro-to-git">here</a>.</p>
         </div>
     </div>
+    <script>
+       createBackButton('content');
+    </script>
     <div class="main-content">
         <div class="follow-board-background">
-            <follow-board squares="4" image="./images/spiderman.png" speed="200"></follow-board>
+            <follow-board squares="4" image="./images/spiderman.png" speed="200" brightness="64"></follow-board>
         </div>
         <h1>Welcome to Tutorials Page</h1>
         <p>This is the landing page for tutorials section, and much like the main landing page, it's under construction so there's not much here currently. </p>

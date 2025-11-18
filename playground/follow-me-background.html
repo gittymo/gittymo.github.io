@@ -3,26 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Follow Me Background - A Fun Background Effect That Follows The Cursor</title>
-    <style>
-        body {
-            padding: 0;
-            margin: 0;
-            background-color: black;
-            height: 100vh;
-        }
+    <title>Morgan Evans: Follow Board Custom HTML Element</title>
 
-        follow-board {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 640px;
-        }
-    </style>
+    <!-- Link in the font to use for my name at the top left of the website. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bruno+Ace&display=swap" rel="stylesheet">
+
+    <!-- Link in global stylesheet rules used throughout the website. -->
+    <link rel="stylesheet" href="../global.css">
+
+    <!-- Link in the global JavaScript file -->
+    <script src="../global.js"></script>
+
+    <!-- Link the follow-board module -->
     <script type="module" src="./shared/follow-board.js"></script>
 </head>
-<body>
-    <follow-board squares="4" image="../images/spiderman.png" speed="200" brightness="255"></follow-board>
+<body onload="init()">
+    <div class="top-bar">
+        <div class="myname">morgan evans</div>
+        <nav>
+            <ul>
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="">About Me</a></li>
+                <li><a href="">Portfolio</a></li>
+                <li><a href="">Playground</a></li>
+                <li><a href="../tutorials.html">Tutorials</a></li>
+                <li><a href="">Blog</a></li>
+                <li><a href="">Contact</a></li>
+            </ul>
+        </nav>
+        <div class="social">
+            <a href="https://www.linkedin.com/in/morgan-evans-31ab90195" target="_blank"><img src="../images/icons/icons8-linkedin-96.png"></a>
+            <a href="https://github.com/gittymo" target="_blank"><img src="../images/icons/icons8-github-96.png" style="background-image: radial-gradient(circle at 50% 60%, white, white 35%, transparent);"></a>
+            <a href="https://www.facebook.com/FaceMorgan" target="_blank"><img src="../images/icons/icons8-facebook-96.png"></a>
+        </div>
+    </div>
+    <div class="sub-links" id="content">
+        <h2>Follow Board HTML Element</h2>
+        <p>The <code>&lt;follow-board&gt;</code> is a small custom made HTML element that uses CSS to drive how it interacts visually with the pointer.</p>
+        <p>Usually (and in most ways, more sensibly), the way this sort of animation would be handled is by using a combination of a <code>&lt;canvas&gt</code> to draw the element and Javascript to control its interaction with the mouse pointer.</p>
+        <p>However, whilst <code>&lt;follow-board&gt;</code> elements do use Javascript to set up the colours of the blocks on the board and configure its behaviour to match what it requested in its attributes, the actual animation is done entirely using CSS position anchor points.</p>
+        <p>Essentially, the element makes use of a <code>&lt;div&gt;</code> element containing a grid of <code>&lt;span&gt;</code> elements that are sized to fit their container. CSS rules and animations then ensure that an <code>::after</code> pseudo element of the div anchors to whichever <code>&lt;span&gt;</code> element the mouse pointer is over. The anchor point remains persistent, even when the mouse leaves the element, making return interactions flow as expected.</p>
+        <p>You can see examples of this custom element being used as the background to the main content on many of this site's pages.</p>
+    </div>
+    <script>
+       createBackButton('content');
+    </script>
+    <div class="main-content">
+       <follow-board squares="4" image="../images/spiderman.png" speed="200" brightness="255"></follow-board>
+    </div>
+    <div class="bottom-bar">&copy;2005 Morgan Evans - <a target="_blank" href="https://icons8.com/icon/xuvGCOXi8Wyg/linkedin">LinkedIn, GitHub and Facebook</a> icons by <a target="_blank" href="https://icons8.com">Icons8</a></div>
 </body>
 </html>

@@ -3,17 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Demonstrate Element With A Blurred Background</title>
+    <title>Morgan Evans: Element With A Frosted Glass Effect Background</title>
+
+    <!-- Link in the font to use for my name at the top left of the website. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bruno+Ace&display=swap" rel="stylesheet">
+
+    <!-- Link for the header font used in the frosted glass element -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Parisienne&display=swap" rel="stylesheet">
-    <style>
-        body {
+
+    <!-- Link in global stylesheet rules used throughout the website. -->
+    <link rel="stylesheet" href="../global.css">
+
+    <!-- Link in the global JavaScript file -->
+    <script src="../global.js"></script>
+
+    <!-- Frosted glass stylesheets -->
+     <style>
+        .main-content {
             padding: 0;
             margin: 0;
             background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80') no-repeat center center fixed;
             background-size: cover;
-            height: 100vh;
+            height: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -69,14 +84,48 @@
         }
     </style>
 </head>
-<body>
-    <div class="blurred-box">
-        <p>A demonstration of frosted glass effect using Cascading Style Sheets.</p>
-        <p>The main <code class="blurred-box">&lt;div&gt;</code> element used to create the box makes use of two background layers - a radial gradient to add sheen to the body, 
-            a linear gradient for the border and a blur backdrop filter.  The heading is positioned absolutely at the bottom right of the box and uses the CSS property text-shadow to give a slightly diffuse effect to the font.</p>
-        <p>The body uses a sans-serif font (Verdana, Geneva, Tahoma, sans-serif) and the header uses "Parisienne", cursive from Google Fonts.</p>
-        <p><code class="blurred-box">&lt;code&gt;</code> elements inside the box also have a slight cumulative blur effect and linear gradient border and shadow to match the overall frosted glass appearance, although the overall effect of these has been lessened to avoid making them contrast too heavily against the rest of the content, whilst still allowing the background to show through.</p>
-        <h1>Frosted Glass Effect</h1>
+<body onload="init()">
+    <div class="top-bar">
+        <div class="myname">morgan evans</div>
+        <nav>
+            <ul>
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="">About Me</a></li>
+                <li><a href="">Portfolio</a></li>
+                <li><a href="">Playground</a></li>
+                <li><a href="../tutorials.html">Tutorials</a></li>
+                <li><a href="">Blog</a></li>
+                <li><a href="">Contact</a></li>
+            </ul>
+        </nav>
+        <div class="social">
+            <a href="https://www.linkedin.com/in/morgan-evans-31ab90195" target="_blank"><img src="../images/icons/icons8-linkedin-96.png"></a>
+            <a href="https://github.com/gittymo" target="_blank"><img src="../images/icons/icons8-github-96.png" style="background-image: radial-gradient(circle at 50% 60%, white, white 35%, transparent);"></a>
+            <a href="https://www.facebook.com/FaceMorgan" target="_blank"><img src="../images/icons/icons8-facebook-96.png"></a>
+        </div>
     </div>
+    <div class="sub-links" id="content">
+        <h2>Frosted Glass Effect Demo</h2>
+        <p>The frosted glass effect that you see to the right is created using a combination of CSS properties, the most prominent
+            being <code>backdrop-filter: blur(10px);</code> or <code>-webkit-backdrop-filter: blur(10px);</code> which applies a blur to the background of the element.</p>
+        <p>The background of the element consists of a pair of fills assigned to its <code>background-image</code> stylesheet property.  The first is a circular <code>radial-gradient</code> which is largely transparent except for a patch of 'bloom' near the top. The second uses a <code>linear-gradient</code> with near the extremes of the top and bottom of the container.  This second background is allowed to show by using <code>box-sizing: border-box</code> to clip the container's main content to the inner edge of the border.</p>
+        <p>Finally, fairly hefty values are applied to the style's <code>box-shadow</code> property to give a very diffuse shadow around the element.</p>
+        <p>The header is positioned absolutely, 20px from the bottom-right of the container and uses a font called "Parisienne" linked to Google's font repository <a href="https://fonts.google.com/specimen/Parisienne">found here</a>, whilst the body text uses Veranda or the closest available sans-serif font.</p>
+        <p>The <code>&lt;code&gt;</code> elements inside the element use a very similar set of styling to the main container, although the effect values are greatly reduced to suit the nature of the content.</p>
+    </div>
+    <script>
+       createBackButton('content');
+    </script>
+    <div class="main-content">
+        <div class="blurred-box">
+            <p>A demonstration of frosted glass effect using Cascading Style Sheets.</p>
+            <p>The main <code class="blurred-box">&lt;div&gt;</code> element used to create the box makes use of two background layers - a radial gradient to add sheen to the body, 
+                a linear gradient for the border and a blur backdrop filter.  The heading is positioned absolutely at the bottom right of the box and uses the CSS property text-shadow to give a slightly diffuse effect to the font.</p>
+            <p>The body uses a sans-serif font (Verdana, Geneva, Tahoma, sans-serif) and the header uses "Parisienne", cursive from Google Fonts.</p>
+            <p><code class="blurred-box">&lt;code&gt;</code> elements inside the box also have a slight cumulative blur effect and linear gradient border and shadow to match the overall frosted glass appearance, although the overall effect of these has been lessened to avoid making them contrast too heavily against the rest of the content, whilst still allowing the background to show through.</p>
+            <h1>Frosted Glass Effect</h1>
+        </div>
+    </div>
+    <div class="bottom-bar">&copy;2005 Morgan Evans - <a target="_blank" href="https://icons8.com/icon/xuvGCOXi8Wyg/linkedin">LinkedIn, GitHub and Facebook</a> icons by <a target="_blank" href="https://icons8.com">Icons8</a></div>
 </body>
 </html>

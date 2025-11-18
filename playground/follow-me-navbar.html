@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morgan Evans: Follow Pointer Navigation Bar</title>
+
+    <!-- Link in the font to use for my name at the top left of the website. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bruno+Ace&display=swap" rel="stylesheet">
+
+    <!-- Link in global stylesheet rules used throughout the website. -->
+    <link rel="stylesheet" href="../global.css">
+
+    <!-- Link in the global JavaScript file -->
+    <script src="../global.js"></script>
+
+    <style>
+        .main-content {
+            margin: 0;
+            padding: 40px;
+            background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80') no-repeat center center fixed;
+            background-size: cover;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            font-size: 0.8em !important;
+        }
+
+        .nav-container {
+            background: hsl(0 0% 0% / 0.55);
+            backdrop-filter: blur(10px);
+            will-change: backdrop-filter;
+            padding: 8px;
+            border-radius: 8px;
+            width: calc(100% - 40px) !important;
+            margin: 0 !important;
+
+            > nav.demo {
+                width: 100% !important;
+                margin: 0 !important;
+                
+                anchor-name: --hovered-link;
+
+                li.demo:hover {
+                    anchor-name: --hovered-link;
+                }
+
+                &::after {
+                    content: '';
+                    position: absolute;
+                    left: anchor(left);
+                    right: anchor(right);
+                    bottom: anchor(bottom);
+                    height: 10px;
+                    background: steelblue;
+                    position-anchor: --hovered-link;
+                    transition: left 300ms, right 300ms, bottom 300ms, background 300ms;
+                    border-radius: 4px;
+                }
+
+                &:has(li:nth-child(1):hover)::after {
+                    background: #ff6b6b;
+                }
+
+                &:has(li:nth-child(2):hover)::after {
+                    background: #4ecdc4;
+                }
+
+                &:has(li:nth-child(3):hover)::after {
+                    background: #ffe66d;
+                }
+
+                &:has(li:nth-child(4):hover)::after {
+                    background: #95e1d3;
+                }
+
+                &:has(li:nth-child(5):hover)::after {
+                    background: #ff4eff;
+                }
+
+                &:has(li:nth-child(6):hover)::after {
+                    background: #4eff4e;
+                }
+
+                @supports (corner-shape: squircle) {
+                    border-radius: 24px;
+                    corner-shape: squircle;
+                }
+
+                > ul.demo {
+                    padding: 0;
+                    margin: 0;
+                    list-style: none;
+                    display: flex;    
+                
+                    > li.demo {
+                        flex: 1;
+                        display: block;
+                        padding: 0.5rem 0.5rem 1rem 0.5rem;
+                        font-size: 2em;
+                        color: white;
+                    }
+                }
+            }
+        }
+
+        .nav-container + p {
+            margin-top: 15px;
+        }
+
+        p.demo {
+            padding: 20px;
+            background: rgba(255 255 255 / 0.66);
+            border-radius: 8px;
+            font-size: 1.5em;
+            color: #333 !important;
+        }
+    </style>
+</head>
+<body onload="init()">
+    <div class="top-bar">
+        <div class="myname">morgan evans</div>
+        <nav>
+            <ul>
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="">About Me</a></li>
+                <li><a href="">Portfolio</a></li>
+                <li><a href="">Playground</a></li>
+                <li><a href="../tutorials.html">Tutorials</a></li>
+                <li><a href="">Blog</a></li>
+                <li><a href="">Contact</a></li>
+            </ul>
+        </nav>
+        <div class="social">
+            <a href="https://www.linkedin.com/in/morgan-evans-31ab90195" target="_blank"><img src="../images/icons/icons8-linkedin-96.png"></a>
+            <a href="https://github.com/gittymo" target="_blank"><img src="../images/icons/icons8-github-96.png" style="background-image: radial-gradient(circle at 50% 60%, white, white 35%, transparent);"></a>
+            <a href="https://www.facebook.com/FaceMorgan" target="_blank"><img src="../images/icons/icons8-facebook-96.png"></a>
+        </div>
+    </div>
+    <div class="sub-links" id="content">
+        <h2>Follow Pointer Navigation Bar</h2>
+        <p>The <code>&lt;follow-board&gt;</code> is a small custom made HTML element that uses CSS to drive how it interacts visually with the pointer.</p>
+        <p>Usually (and in most ways, more sensibly), the way this sort of animation would be handled is by using a combination of a <code>&lt;canvas&gt</code> to draw the element and Javascript to control its interaction with the mouse pointer.</p>
+        <p>However, whilst <code>&lt;follow-board&gt;</code> elements do use Javascript to set up the colours of the blocks on the board and configure its behaviour to match what it requested in its attributes, the actual animation is done entirely using CSS position anchor points.</p>
+        <p>Essentially, the element makes use of a <code>&lt;div&gt;</code> element containing a grid of <code>&lt;span&gt;</code> elements that are sized to fit their container. CSS rules and animations then ensure that an <code>::after</code> pseudo element of the div anchors to whichever <code>&lt;span&gt;</code> element the mouse pointer is over. The anchor point remains persistent, even when the mouse leaves the element, making return interactions flow as expected.</p>
+        <p>You can see examples of this custom element being used as the background to the main content on many of this site's pages.</p>
+    </div>
+    <script>
+       createBackButton('content');
+    </script>
+    <div class="main-content">
+        <div class="nav-container">
+            <nav class="demo">
+                <ul class="demo">
+                    <li class="demo">Home</li>
+                    <li class="demo">About</li>
+                    <li class="demo">Products</li>
+                    <li class="demo">Services</li>
+                    <li class="demo">Blog</li>
+                    <li class="demo">Contact</li>
+                </ul>
+            </nav>
+        </div>
+        <p class="demo">Wow, so this was a bit of a nightmare to get right.  The navigation bar animation is completely CSS controlled and really isn't too complicated in itself. Essentially just using an <code>::after</code> pseudo element to create the coloured bar which is anchored to the left, right and bottom edges of whichever element represents its anchor point.</p>
+        <p class="demo">Initially (where the mouse isn't hovering over a "link"), the <code>::after</code> pseudo element is anchored to the <code>&lt;nav&gt;</code> element itself, and so it stretches out across the width of the nav bar.<br><br>  When the mouse hovers over a link, the anchor point is moved to that link element.  A CSS transition is set up to animate the left, right and top positions (and colour) of the <code>::after</code> pseudo element, meaning that wherever the anchor pointmoves, the coloured bar will smoothly transition its co-ordinates until they match the dimensions of the target element (link).<br><br> When the mouse leaves the element (link), the anchor point reverts back to its host nav element (the nav bar).</p>
+        <p class="demo">What made this navigation bar particularly tricky is that the nav bar background uses a backdrop-filter property to blur the image behind it.  Using a filter causes the host element to create a new stacking and container context that hides any pseudo elements attached to their base element.  In effect, this caused the <code>::after</code> pseudo element to disappear from the nav bar when no link is active. The blur doesn't affect the link elements,as they are on a separate layer.<br><br>
+        To get around this, I kind-of-cheated and created a nav bar container element that deals with the blurring of the background, placing the nav-bar and its <code>::after</code> pseudo element on the layer above it, allowing the transitions to be correctly handled by the nav bar CSS rules. A bit ugly, but it works!</p>
+    </div>
+    <div class="bottom-bar">&copy;2005 Morgan Evans - <a target="_blank" href="https://icons8.com/icon/xuvGCOXi8Wyg/linkedin">LinkedIn, GitHub and Facebook</a> icons by <a target="_blank" href="https://icons8.com">Icons8</a></div>
+</body>
+</html>

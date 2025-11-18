@@ -74,6 +74,8 @@ function BreakText(element, chance = 5) {
     element.innerHTML = newElementText;
 }
 
+
+
 function initFilterButtons() {
     const filterButtons = document.getElementsByClassName('filter-button');
     for (let i = 0; i < filterButtons.length; i++) {
@@ -103,4 +105,62 @@ function filterContentByCategory(category) {
 
 function init() {
     initFilterButtons();
+    setupPageTracking();
+}
+
+// Cookie management functions for tracking last visited page
+function setCookie(name, value, days = 30) {
+    const date = new Date();
+    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+    const expires = "expires=" + date.toUTCString();
+    document.cookie = name + "=" + value + ";" + expires + ";path=/";
+}
+
+function getCookie(name) {
+    const nameEQ = name + "=";
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+        let cookie = cookies[i].trim();
+        if (cookie.indexOf(nameEQ) === 0) {
+            return cookie.substring(nameEQ.length);
+        }
+    }
+    return null;
+}
+
+function setupPageTracking() {
+    // Save the current page when leaving (clicking a link or navigating away)
+    window.addEventListener('beforeunload', function() {
+        const currentPage = window.location.pathname;
+        const lastPage = getCookie('lastPage');
+        
+        // Only update if we're actually navigating to a different page
+        if (!lastPage || lastPage !== currentPage) {
+            setCookie('lastPage', currentPage);
+        }
+    });
+}
+
+function getLastPage() {
+    // Returns the last visited page
+    return getCookie('lastPage');
+}
+
+function createBackButton(containerId) {
+    // Creates a back button that links to the last visited page
+    const lastPage = getLastPage();
+    const container = document.getElementById(containerId);
+    
+    if (!container) {
+        console.error('Container element not found:', containerId);
+        return;
+    }
+    
+    if (lastPage) {
+        const backButton = document.createElement('a');
+        backButton.href = lastPage;
+        backButton.textContent = 'Back to Previous Page';
+        backButton.className = 'back-button';
+        container.appendChild(backButton);
+    }
 }
