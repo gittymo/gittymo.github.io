@@ -16,23 +16,24 @@
     <!-- Link in the global JavaScript file -->
     <script src="../global.js"></script>
 
+    <!-- Link in the follow-navbar component -->
+    <script type="module" src="./shared/follow-navbar.js"></script>
+
     <!-- Link the follow-board module -->
     <script type="module" src="./shared/follow-board.js"></script>
 </head>
 <body onload="init()">
     <div class="top-bar">
         <div class="myname">morgan evans</div>
-        <nav>
-            <ul>
-                <li><a href="../index.html">Home</a></li>
-                <li><a href="">About Me</a></li>
-                <li><a href="">Portfolio</a></li>
-                <li><a href="">Playground</a></li>
-                <li><a href="../tutorials.html">Tutorials</a></li>
-                <li><a href="">Blog</a></li>
-                <li><a href="">Contact</a></li>
-            </ul>
-        </nav>
+        <follow-navbar font-size="1em">
+            <a href="../index.html">Home</a>
+            <a href="">About Me</a>
+            <a href="">Portfolio</a>
+            <a href="">Playground</a>
+            <a href="../tutorials.html">Tutorials</a>
+            <a href="">Blog</a>
+            <a href="">Contact</a>
+        </follow-navbar>
         <div class="social">
             <a href="https://www.linkedin.com/in/morgan-evans-31ab90195" target="_blank"><img src="../images/icons/icons8-linkedin-96.png"></a>
             <a href="https://github.com/gittymo" target="_blank"><img src="../images/icons/icons8-github-96.png" style="background-image: radial-gradient(circle at 50% 60%, white, white 35%, transparent);"></a>

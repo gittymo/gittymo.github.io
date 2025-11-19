@@ -16,6 +16,9 @@
     <!-- Link in the global JavaScript file -->
     <script src="../global.js"></script>
 
+    <!-- Link in the follow-navbar component -->
+    <script type="module" src="./shared/follow-navbar.js"></script>
+
     <style>
         .main-content {
             margin: 0;
@@ -36,105 +39,35 @@
             will-change: backdrop-filter;
             padding: 8px;
             border-radius: 8px;
-            width: calc(100% - 40px) !important;
             margin: 0 !important;
-
-            > nav.demo {
-                width: 100% !important;
-                margin: 0 !important;
-                
-                anchor-name: --hovered-link;
-
-                li.demo:hover {
-                    anchor-name: --hovered-link;
-                }
-
-                &::after {
-                    content: '';
-                    position: absolute;
-                    left: anchor(left);
-                    right: anchor(right);
-                    bottom: anchor(bottom);
-                    height: 10px;
-                    background: steelblue;
-                    position-anchor: --hovered-link;
-                    transition: left 300ms, right 300ms, bottom 300ms, background 300ms;
-                    border-radius: 4px;
-                }
-
-                &:has(li:nth-child(1):hover)::after {
-                    background: #ff6b6b;
-                }
-
-                &:has(li:nth-child(2):hover)::after {
-                    background: #4ecdc4;
-                }
-
-                &:has(li:nth-child(3):hover)::after {
-                    background: #ffe66d;
-                }
-
-                &:has(li:nth-child(4):hover)::after {
-                    background: #95e1d3;
-                }
-
-                &:has(li:nth-child(5):hover)::after {
-                    background: #ff4eff;
-                }
-
-                &:has(li:nth-child(6):hover)::after {
-                    background: #4eff4e;
-                }
-
-                @supports (corner-shape: squircle) {
-                    border-radius: 24px;
-                    corner-shape: squircle;
-                }
-
-                > ul.demo {
-                    padding: 0;
-                    margin: 0;
-                    list-style: none;
-                    display: flex;    
-                
-                    > li.demo {
-                        flex: 1;
-                        display: block;
-                        padding: 0.5rem 0.5rem 1rem 0.5rem;
-                        font-size: 2em;
-                        color: white;
-                    }
-                }
-            }
         }
 
-        .nav-container + p {
-            margin-top: 15px;
-        }
-
-        p.demo {
-            padding: 20px;
+        .main-content p {
+            font-size: 1em !important;
+            padding: 20px !important;
             background: rgba(255 255 255 / 0.66);
             border-radius: 8px;
             font-size: 1.5em;
             color: #333 !important;
+        }
+
+        .main-content div.nav-container + p {
+            margin-top: 10px;
         }
     </style>
 </head>
 <body onload="init()">
     <div class="top-bar">
         <div class="myname">morgan evans</div>
-        <nav>
-            <ul>
-                <li><a href="../index.html">Home</a></li>
-                <li><a href="">About Me</a></li>
-                <li><a href="">Portfolio</a></li>
-                <li><a href="">Playground</a></li>
-                <li><a href="../tutorials.html">Tutorials</a></li>
-                <li><a href="">Blog</a></li>
-                <li><a href="">Contact</a></li>
-            </ul>
-        </nav>
+        <follow-navbar font-size="1em">
+            <a href="../index.html">Home</a>
+            <a href="">About Me</a>
+            <a href="">Portfolio</a>
+            <a href="">Playground</a>
+            <a href="../tutorials.html">Tutorials</a>
+            <a href="">Blog</a>
+            <a href="">Contact</a>
+        </follow-navbar>
         <div class="social">
             <a href="https://www.linkedin.com/in/morgan-evans-31ab90195" target="_blank"><img src="../images/icons/icons8-linkedin-96.png"></a>
             <a href="https://github.com/gittymo" target="_blank"><img src="../images/icons/icons8-github-96.png" style="background-image: radial-gradient(circle at 50% 60%, white, white 35%, transparent);"></a>
@@ -143,31 +76,29 @@
     </div>
     <div class="sub-links" id="content">
         <h2>Follow Pointer Navigation Bar</h2>
-        <p>The <code>&lt;follow-board&gt;</code> is a small custom made HTML element that uses CSS to drive how it interacts visually with the pointer.</p>
-        <p>Usually (and in most ways, more sensibly), the way this sort of animation would be handled is by using a combination of a <code>&lt;canvas&gt</code> to draw the element and Javascript to control its interaction with the mouse pointer.</p>
-        <p>However, whilst <code>&lt;follow-board&gt;</code> elements do use Javascript to set up the colours of the blocks on the board and configure its behaviour to match what it requested in its attributes, the actual animation is done entirely using CSS position anchor points.</p>
-        <p>Essentially, the element makes use of a <code>&lt;div&gt;</code> element containing a grid of <code>&lt;span&gt;</code> elements that are sized to fit their container. CSS rules and animations then ensure that an <code>::after</code> pseudo element of the div anchors to whichever <code>&lt;span&gt;</code> element the mouse pointer is over. The anchor point remains persistent, even when the mouse leaves the element, making return interactions flow as expected.</p>
-        <p>You can see examples of this custom element being used as the background to the main content on many of this site's pages.</p>
+        <p>Wow, this little project has grown and grown.  Firstly, I've kept most of the content that was in the original web page, as it is still relevant to how things work when it comes to the way the animation tracks the mouse pointer as it moves over the navigation bar links.</p>
+        <p>However, when I brought the page into this site in a way that would keep the visual layout of everything in tact, it totally broke
+            the navigation bar at the top, because that navigation bar actually uses the same style sheets!</p>
+        <p>So, I re-built the entire thing as a custom HTML element called <code>&lt;follow-navbar&gt;</code> and added some nice quality-of-life features.  Firstly, you can now control how deep you want the follow bar (the bit that tracks the mouse pointer) to be, how fast it moves and the font size of the links.  You can also define the colour of the follow bar when it hovers over a navigation element by setting the 'follow-colour' attribute on each element (if it's not set, it just uses the default steelblue colour).</p>
+        <p>Now, as you can see, you can have more than one navigation bar on a page and each can have its own formatting (and of course the elements can be further formatted using CSS).</p>
     </div>
     <script>
        createBackButton('content');
     </script>
     <div class="main-content">
         <div class="nav-container">
-            <nav class="demo">
-                <ul class="demo">
-                    <li class="demo">Home</li>
-                    <li class="demo">About</li>
-                    <li class="demo">Products</li>
-                    <li class="demo">Services</li>
-                    <li class="demo">Blog</li>
-                    <li class="demo">Contact</li>
-                </ul>
-            </nav>
+            <follow-navbar font-size="1.5em" follow-height="10px" follow-speed="200ms">
+                <span follow-colour="#4eff4e">Home</span>
+                <span follow-colour="#ff6b6b">About</span>
+                <span follow-colour="#4ecdc4">Products</span>
+                <span follow-colour="#ffe66d">Services</span>
+                <span follow-colour="#95e1d3">Blog</span>
+                <span follow-colour="#ff4eff">Contact</span>
+            </follow-navbar>
         </div>
-        <p class="demo">Wow, so this was a bit of a nightmare to get right.  The navigation bar animation is completely CSS controlled and really isn't too complicated in itself. Essentially just using an <code>::after</code> pseudo element to create the coloured bar which is anchored to the left, right and bottom edges of whichever element represents its anchor point.</p>
-        <p class="demo">Initially (where the mouse isn't hovering over a "link"), the <code>::after</code> pseudo element is anchored to the <code>&lt;nav&gt;</code> element itself, and so it stretches out across the width of the nav bar.<br><br>  When the mouse hovers over a link, the anchor point is moved to that link element.  A CSS transition is set up to animate the left, right and top positions (and colour) of the <code>::after</code> pseudo element, meaning that wherever the anchor pointmoves, the coloured bar will smoothly transition its co-ordinates until they match the dimensions of the target element (link).<br><br> When the mouse leaves the element (link), the anchor point reverts back to its host nav element (the nav bar).</p>
-        <p class="demo">What made this navigation bar particularly tricky is that the nav bar background uses a backdrop-filter property to blur the image behind it.  Using a filter causes the host element to create a new stacking and container context that hides any pseudo elements attached to their base element.  In effect, this caused the <code>::after</code> pseudo element to disappear from the nav bar when no link is active. The blur doesn't affect the link elements,as they are on a separate layer.<br><br>
+        <p>Wow, so this was a bit of a nightmare to get right.  The navigation bar animation is completely CSS controlled and really isn't too complicated in itself. Essentially just using an <code>::after</code> pseudo element to create the coloured bar which is anchored to the left, right and bottom edges of whichever element represents its anchor point.</p>
+        <p>Initially (where the mouse isn't hovering over a "link"), the <code>::after</code> pseudo element is anchored to the <code>&lt;nav&gt;</code> element itself, and so it stretches out across the width of the nav bar.<br><br>  When the mouse hovers over a link, the anchor point is moved to that link element.  A CSS transition is set up to animate the left, right and top positions (and colour) of the <code>::after</code> pseudo element, meaning that wherever the anchor pointmoves, the coloured bar will smoothly transition its co-ordinates until they match the dimensions of the target element (link).<br><br> When the mouse leaves the element (link), the anchor point reverts back to its host nav element (the nav bar).</p>
+        <p>What made this navigation bar particularly tricky is that the nav bar background uses a backdrop-filter property to blur the image behind it.  Using a filter causes the host element to create a new stacking and container context that hides any pseudo elements attached to their base element.  In effect, this caused the <code>::after</code> pseudo element to disappear from the nav bar when no link is active. The blur doesn't affect the link elements,as they are on a separate layer.<br><br>
         To get around this, I kind-of-cheated and created a nav bar container element that deals with the blurring of the background, placing the nav-bar and its <code>::after</code> pseudo element on the layer above it, allowing the transitions to be correctly handled by the nav bar CSS rules. A bit ugly, but it works!</p>
     </div>
     <div class="bottom-bar">&copy;2005 Morgan Evans - <a target="_blank" href="https://icons8.com/icon/xuvGCOXi8Wyg/linkedin">LinkedIn, GitHub and Facebook</a> icons by <a target="_blank" href="https://icons8.com">Icons8</a></div>

@@ -25,55 +25,6 @@ body {
     grid-template-columns: 1fr 3fr 1fr;
     padding: 0px 10px;
 
-    > nav {
-        display: flex;
-        flex-direction: row;
-        justify-self: center;
-        width: fit-content;
-        grid-column: 2;
-        box-sizing: border-box;
-        padding: 0;
-        margin: 0;
-        anchor-name: --hovered-link;
-
-        &::after {
-            content: '';
-            position: absolute;
-            left: anchor(left);
-            right: anchor(right);
-            bottom: anchor(bottom);
-            height: 4px;
-            background: var(--link-hover-color);
-            position-anchor: --hovered-link;
-            transition: left 300ms, right 300ms, bottom 300ms, background 300ms;
-            border-radius: 4px;
-        }
-
-        > ul {
-            display: flex;
-            justify-content: center;
-            flex-direction: row;
-            list-style: none;
-            padding: 0;
-            margin: 0;
-
-            > li {
-                padding: 10px;
-
-                > a {
-                    color: white;
-                    text-decoration: none;
-                    padding: 0;
-                    margin: 0;
-                }
-            }
-
-            > li:hover {
-                anchor-name: --hovered-link;
-            }
-        }
-    }
-
     > div.social {
         grid-column: 3;
         justify-self: end;
