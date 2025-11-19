@@ -94,11 +94,67 @@ function initFilterButtons() {
 function filterContentByCategory(category) {
     const contentItems = document.getElementsByClassName('content-item');
     for (let i = 0; i < contentItems.length; i++) {
-        const itemCategories = contentItems[i].getAttribute('cat-filter').split(' '); 
-        if (itemCategories.includes(category) || category === 'all') {
-            contentItems[i].style.display = 'block';
+        const el = contentItems[i];
+        const itemCategories = (el.getAttribute('cat-filter') || '').split(' ');
+        const shouldShow = itemCategories.includes(category) || category === 'all';
+
+        const isHidden = el.classList.contains('hidden') || getComputedStyle(el).display === 'none';
+
+        if (shouldShow) {
+            if (!isHidden) {
+                // already visible
+                el.classList.remove('fade-out');
+                el.classList.remove('fade-in');
+                el.style.display = 'block';
+                el.style.height = '';
+                continue;
+            }
+
+            // Show: remove hidden, set height from 0 -> scrollHeight to animate expansion
+            el.classList.remove('hidden');
+            el.style.display = 'block';
+            // start collapsed
+            el.style.height = '0px';
+            // reflow
+            void el.offsetWidth;
+            // set target height
+            const target = el.scrollHeight;
+            el.classList.remove('fade-out');
+            el.classList.add('fade-in');
+            el.style.height = target + 'px';
+
+            const onShowEnd = function (ev) {
+                if (ev.propertyName === 'height') {
+                    el.style.height = '';
+                    el.classList.remove('fade-in');
+                    el.removeEventListener('transitionend', onShowEnd);
+                }
+            };
+            el.addEventListener('transitionend', onShowEnd);
         } else {
-            contentItems[i].style.display = 'none';
+            if (isHidden) continue;
+
+            // Hide: animate from scrollHeight -> 0 so siblings slide up
+            const startH = el.scrollHeight;
+            el.style.height = startH + 'px';
+            // force reflow
+            void el.offsetWidth;
+            // start visual fade
+            el.classList.remove('fade-in');
+            el.classList.add('fade-out');
+            // animate to zero height
+            el.style.height = '0px';
+
+            const onHideEnd = function (ev) {
+                if (ev.propertyName === 'height') {
+                    el.style.display = 'none';
+                    el.classList.remove('fade-out');
+                    el.classList.add('hidden');
+                    el.style.height = '';
+                    el.removeEventListener('transitionend', onHideEnd);
+                }
+            };
+            el.addEventListener('transitionend', onHideEnd);
         }
     }
 }

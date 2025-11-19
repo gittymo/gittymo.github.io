@@ -56,6 +56,7 @@ body {
         font-weight: 400;
         font-style: normal;
         font-size: 1.6em;
+        transform: translateY(-2px);
     }
 }
 
@@ -178,4 +179,39 @@ body {
     grid-column-start: 1;
     grid-column-end: 3;
     grid-row: 3; 
+}
+
+/* -- Animated filter items ------------------------------------------------- */
+.content-item {
+    box-sizing: border-box;
+    overflow: hidden;
+    margin: 0 0 2px 0;
+    padding: 0 0;
+    transition: height 360ms cubic-bezier(.2,.8,.2,1), opacity 360ms cubic-bezier(.2,.8,.2,1), transform 360ms cubic-bezier(.2,.8,.2,1), margin 360ms cubic-bezier(.2,.8,.2,1), padding 360ms cubic-bezier(.2,.8,.2,1);
+    will-change: height, opacity, transform, margin, padding;
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+.content-item.fade-in {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+.content-item.fade-out {
+    opacity: 0;
+    transform: translateY(8px) scale(0.99);
+    pointer-events: none;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.content-item.hidden {
+    display: none !important;
+}
+
+/* small helper to ensure consistent start state for JS-driven height transitions */
+.content-item[data-initialized="true"] {
+    /* no-op; marker class */
 }
