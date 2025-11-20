@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morgan Evans: Balloon Loon Game</title>
+
+    <!-- Link in the font to use for my name at the top left of the website. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bruno+Ace&display=swap" rel="stylesheet">
+
+    <!-- Link for the header font used in the frosted glass element -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Parisienne&display=swap" rel="stylesheet">
+
+    <!-- Link in global stylesheet rules used throughout the website. -->
+    <link rel="stylesheet" href="../global.css">
+
+    <!-- Link in the global JavaScript file -->
+    <script src="../global.js"></script>
+
+    <!-- Link in the follow-navbar component -->
+    <script type="module" src="./shared/follow-navbar.js"></script>
+
+    <script>
+        class BalloonLoonGame {
+            #balloonSprite;
+            #cloudPlatformSprite;
+            #loonSprite;
+
+            #score = 0;
+            #highScore = 0;
+            
+            #dropSpeedPixelsPerSecond = 64;
+            #startLevelTimeoutMilliseconds = 3000;
+
+            #demoMode = true;
+            #demoModeOffset;
+
+            #clouds;
+            #cloudsCount = 20;
+            #loon;
+            #balloon;
+
+            #canvas;
+            #ctx;
+
+            constructor(canvasId) {
+                this.#canvas = document.getElementById(canvasId);
+                this.#ctx = this.#canvas.getContext('2d');
+            }
+
+            loadSprites() {
+                return new Promise((resolve) => {
+                    let loadedCount = 0;
+                    const checkAllLoaded = () => {
+                        loadedCount++;
+                        if (loadedCount === 3) {
+                            resolve();
+                        }
+                    };
+
+                    this.#balloonSprite = new Image();
+                    this.#balloonSprite.src = './images/balloonloon/balloon.png';
+                    this.#balloonSprite.onload = checkAllLoaded;
+
+                    this.#cloudPlatformSprite = new Image();
+                    this.#cloudPlatformSprite.src = './images/balloonloon/cloud.png';
+                    this.#cloudPlatformSprite.onload = checkAllLoaded;
+
+                    this.#loonSprite = new Image();
+                    this.#loonSprite.src = './images/balloonloon/loon.png';
+                    this.#loonSprite.onload = checkAllLoaded;
+                });
+            }
+
+            loadHighScore() {
+                const savedScore = getCookie('balloonLoonHighScore');
+                this.#highScore = savedScore ? parseInt(savedScore, 10) : 0;
+            }
+
+            saveHighScore() {
+                setCookie('balloonLoonHighScore', this.#highScore, 365);
+            }
+
+            initClouds() {
+                this.#clouds = [];
+                // Get the width of the cloud sprite
+                const cloudWidth = this.#cloudPlatformSprite.width;
+                // Get the height of the cloud sprite
+                const cloudHeight = this.#cloudPlatformSprite.height;
+                // Get the width of the canvas
+                const canvasWidth = this.#canvas.width;
+                // Get the height of the canvas
+                const canvasHeight = this.#canvas.height;
+                // If the canvas width is less than 2.5 times the cloud width, throw an error.
+                if (canvasWidth < cloudWidth * 2.5) {
+                    throw new Error('Canvas width is too small.');
+                }
+                // Make sure the canvas is tall enough.
+                if (this.#canvas.height < 128 + (3 * (64 + cloudHeight))) {
+                    throw new Error('Canvas height is too small.');
+                }
+                // We're going to start by placing a cloud horizontally centered and 128 pixels from the bottom of the canvas.
+                let cloudY = canvasHeight - (128 - cloudHeight);
+                let cloudX = (canvasWidth - cloudWidth) / 2;
+                let cloudYStep = 64 + cloudHeight;
+                do {
+                    let cloudXStep =  cloudWidth / 3 * 4 * (Math.random() < 0.5 ? -1 : 1);
+                    let directionSteps = Math.floor(Math.random() * 3) + 1;
+                    for (let i = 0; i < directionSteps && this.#clouds.length < this.#cloudsCount; i++) {
+                        this.#clouds.push({ x: cloudX, y: cloudY });
+                        cloudY -= cloudYStep;
+                        if (cloudX + cloudXStep < 0 || cloudX + cloudXStep > canvasWidth - cloudWidth) {
+                            cloudXStep = -cloudXStep;
+                        }
+                        cloudX += cloudXStep;
+                    }
+                } while (this.#clouds.length < this.#cloudsCount);
+            }
+
+            initGame() {
+                this.#score = 0;
+                this.initClouds();
+
+                // Place loon centrally on the bottom cloud
+                const bottomCloud = this.#clouds[0];
+                this.#loon = { x: bottomCloud.x + (this.#cloudPlatformSprite.width - this.#loonSprite.width) / 2, y: bottomCloud.y - this.#loonSprite.height };
+
+                // Place the balloon 128 pixels above the last cloud and centered horizontally above it.
+                this.#balloon = { x: this.#clouds[this.#cloudsCount - 1].x + (this.#cloudPlatformSprite.width - this.#balloonSprite.width) / 2, y: this.#clouds[this.#cloudsCount - 1].y - (64 + this.#balloonSprite.height) };
+
+                // Set the game into demo mode. Use a simple looping upward animation
+                // for the demo so sprites visibly move regardless of initial positions.
+                this.#demoMode = true;
+                this.#demoModeOffset = -this.#balloon.y + this.#balloonSprite.height + (this.#canvas.height / 3);
+            }
+
+            drawSprites() {
+                const canvas = document.getElementById('gameCanvas');
+                const ctx = canvas.getContext('2d');
+
+                // Clear the canvas
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                // Draw clouds
+                for (const cloud of this.#clouds) {
+                    ctx.drawImage(this.#cloudPlatformSprite, cloud.x, cloud.y + this.#demoModeOffset);
+                }
+
+                // Draw loon
+                ctx.drawImage(this.#loonSprite, this.#loon.x, this.#loon.y + this.#demoModeOffset);
+
+                // Draw balloon
+                ctx.drawImage(this.#balloonSprite, this.#balloon.x, this.#balloon.y + this.#demoModeOffset);
+            }
+
+            start() {
+                this.loadHighScore();
+                this.loadSprites().then(() => {
+                    this.initGame();
+                    // Start the game loop and input handling here
+                    this.drawSprites();
+                    setInterval(() => this.animate(), 1000 / 60);
+                });
+            }
+
+            animate() {
+                if (this.#demoMode && this.#demoModeOffset > 0) {
+                    // Move sprites upward each frame. When offset reaches -200px, reset to 0
+                    // to create a looping demo motion.
+                    this.#demoModeOffset -= this.#dropSpeedPixelsPerSecond / 10;
+                    this.drawSprites();
+                }
+            }
+        }
+
+        function startGame() {
+            const game = new BalloonLoonGame("gameCanvas");
+            game.start();
+        }
+    </script>
+</head>
+<body onload="init(); startGame();">
+    <div class="top-bar">
+        <div class="myname">morgan evans</div>
+        <follow-navbar font-size="1em">
+            <a href="../index.html">Home</a>
+            <a href="">About Me</a>
+            <a href="">Portfolio</a>
+            <a href="">Playground</a>
+            <a href="../tutorials.html">Tutorials</a>
+            <a href="">Blog</a>
+            <a href="">Contact</a>
+        </follow-navbar>
+        <div class="social">
+            <a href="https://www.linkedin.com/in/morgan-evans-31ab90195" target="_blank"><img src="../images/icons/icons8-linkedin-96.png"></a>
+            <a href="https://github.com/gittymo" target="_blank"><img src="../images/icons/icons8-github-96.png" style="background-image: radial-gradient(circle at 50% 60%, white, white 35%, transparent);"></a>
+            <a href="https://www.facebook.com/FaceMorgan" target="_blank"><img src="../images/icons/icons8-facebook-96.png"></a>
+        </div>
+    </div>
+    <div class="sub-links" id="content">
+        <h2>Balloon Loon Game</h2>
+        <p>This is the first Javascript game I've written for a while and so I'm going to make it the subject of the first blog.</p>
+        <p>In the meantime, there's not much to see other than a test of the demo-mode animation which runs automatically when a level starts. 
+            It's meant to give the player an overview of the level layout before they start playing. As you can see, there's only the loon, 
+            balloon and cloud platform sprites in place so far. The game logic and input handling still need to be implemented.</p>
+        <p>Stay tuned to my blog for more updates!</p>
+    </div>
+    <script>
+       createBackButton('content');
+    </script>
+    <div class="main-content">
+        <canvas id="gameCanvas" width="640" height="540" style="background-color: skyblue"></canvas>
+    </div>
+    <div class="bottom-bar">&copy;2005 Morgan Evans - <a target="_blank" href="https://icons8.com/icon/xuvGCOXi8Wyg/linkedin">LinkedIn, GitHub and Facebook</a> icons by <a target="_blank" href="https://icons8.com">Icons8</a></div>
+</body>
+</html>
