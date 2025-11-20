@@ -46,10 +46,133 @@
 
             #canvas;
             #ctx;
+            #lastFrameTime = 0;
+
+            #loonIsJumping = false;
+            #loonCurrentCloudIndex = 0;
+            #loonJumpStartX = 0;
+            #loonJumpStartY = 0;
+            #loonJumpEndX = 0;
+            #loonJumpEndY = 0;
+            #loonJumpProgress = 0;
+            #loonJumpDuration = 0.5; // seconds
+            #loonIsFalling = false;
+
+            #gameStartTime = 0;
+            #cloudsFalling = false;
+            #loonOnBalloon = false;
+            #balloonEscaping = false;
+            #jumpingToBalloon = false;
 
             constructor(canvasId) {
                 this.#canvas = document.getElementById(canvasId);
                 this.#ctx = this.#canvas.getContext('2d');
+                this.setupKeyboardControls();
+            }
+
+            setupKeyboardControls() {
+                document.addEventListener('keydown', (e) => {
+                    if (this.#demoMode) {
+                        // Exit demo mode on first key press
+                        this.#demoMode = false;
+                        this.#demoModeOffset = 0;
+                        this.#gameStartTime = performance.now();
+                    }
+
+                    if (this.#loonIsJumping) return; // Can't jump while already jumping
+
+                    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+                        e.preventDefault();
+                        this.jumpLoon(e.key === 'ArrowLeft' ? -1 : 1);
+                    } else if (e.key === 'ArrowUp' && this.#loonCurrentCloudIndex === this.#cloudsCount - 1) {
+                        e.preventDefault();
+                        this.jumpToBalloon();
+                    }
+                });
+            }
+
+            jumpToBalloon() {
+                // Jump straight up to balloon basket
+                this.#loonIsJumping = true;
+                this.#jumpingToBalloon = true;
+                this.#loonJumpProgress = 0;
+                this.#loonJumpStartX = this.#loon.x;
+                this.#loonJumpStartY = this.#loon.y;
+                this.#loonIsFalling = false;
+                
+                // Target is 6 pixels above balloon bottom (basket position)
+                this.#loonJumpEndX = this.#balloon.x + (this.#balloonSprite.width - this.#loonSprite.width) / 2;
+                this.#loonJumpEndY = this.#balloon.y + this.#balloonSprite.height - 6 - this.#loonSprite.height;
+                this.#loonJumpDuration = 0.4;
+            }
+
+            jumpLoon(direction) {
+                // Find the next cloud in the specified direction
+                const targetCloudIndex = this.findNextCloud(direction);
+                
+                // Set up jump parameters
+                this.#loonIsJumping = true;
+                this.#loonJumpProgress = 0;
+                this.#loonJumpStartX = this.#loon.x;
+                this.#loonJumpStartY = this.#loon.y;
+                
+                if (targetCloudIndex === -1) {
+                    // No valid cloud found - loon will fall off screen
+                    this.#loonIsFalling = true;
+                    const currentCloud = this.#clouds[this.#loonCurrentCloudIndex];
+                    const horizontalJumpDistance = 150; // Distance to jump before falling
+                    
+                    // Jump in the specified direction, then fall
+                    this.#loonJumpEndX = this.#loonJumpStartX + (direction * horizontalJumpDistance);
+                    this.#loonJumpEndY = this.#canvas.height + this.#loonSprite.height; // Fall off bottom of screen
+                    this.#loonJumpDuration = 1.5; // Longer duration for falling
+                } else {
+                    // Valid cloud found
+                    this.#loonIsFalling = false;
+                    this.#jumpingToBalloon = false;
+                    const targetCloud = this.#clouds[targetCloudIndex];
+                    this.#loonJumpEndX = targetCloud.x + (this.#cloudPlatformSprite.width - this.#loonSprite.width) / 2;
+                    this.#loonJumpEndY = targetCloud.y - this.#loonSprite.height;
+                    this.#loonCurrentCloudIndex = targetCloudIndex;
+                    this.#loonJumpDuration = 0.5;
+                }
+            }
+
+            findNextCloud(direction) {
+                const currentCloud = this.#clouds[this.#loonCurrentCloudIndex];
+                const currentCloudCenterX = currentCloud.x + this.#cloudPlatformSprite.width / 2;
+                const cloudHeight = this.#cloudPlatformSprite.height;
+                const expectedVerticalGap = 64 + cloudHeight; // From initClouds cloudYStep
+                
+                // Look for the immediately adjacent cloud above in the specified direction
+                let bestCloudIndex = -1;
+                let bestDistance = Infinity;
+                
+                for (let i = 0; i < this.#clouds.length; i++) {
+                    if (i === this.#loonCurrentCloudIndex) continue;
+                    
+                    const cloud = this.#clouds[i];
+                    const cloudCenterX = cloud.x + this.#cloudPlatformSprite.width / 2;
+                    
+                    // Calculate vertical distance
+                    const verticalDistance = currentCloud.y - cloud.y;
+                    
+                    // Check if cloud is immediately above (within tolerance of expected gap)
+                    const isImmediatelyAbove = Math.abs(verticalDistance - expectedVerticalGap) < 20;
+                    const isInDirection = direction < 0 ? cloudCenterX < currentCloudCenterX : cloudCenterX > currentCloudCenterX;
+                    
+                    if (isImmediatelyAbove && isInDirection) {
+                        // Calculate horizontal distance
+                        const dx = Math.abs(cloudCenterX - currentCloudCenterX);
+                        
+                        if (dx < bestDistance) {
+                            bestDistance = dx;
+                            bestCloudIndex = i;
+                        }
+                    }
+                }
+                
+                return bestCloudIndex;
             }
 
             loadSprites() {
@@ -132,10 +255,9 @@
                 // Place the balloon 128 pixels above the last cloud and centered horizontally above it.
                 this.#balloon = { x: this.#clouds[this.#cloudsCount - 1].x + (this.#cloudPlatformSprite.width - this.#balloonSprite.width) / 2, y: this.#clouds[this.#cloudsCount - 1].y - (64 + this.#balloonSprite.height) };
 
-                // Set the game into demo mode. Use a simple looping upward animation
-                // for the demo so sprites visibly move regardless of initial positions.
+                // Set the game into demo mode. Position everything so balloon starts from bottom of screen
                 this.#demoMode = true;
-                this.#demoModeOffset = -this.#balloon.y + this.#balloonSprite.height + (this.#canvas.height / 3);
+                this.#demoModeOffset = this.#canvas.height - this.#balloon.y;
             }
 
             drawSprites() {
@@ -163,17 +285,144 @@
                     this.initGame();
                     // Start the game loop and input handling here
                     this.drawSprites();
-                    setInterval(() => this.animate(), 1000 / 60);
+                    this.#lastFrameTime = performance.now();
+                    requestAnimationFrame((timestamp) => this.animate(timestamp));
                 });
             }
 
-            animate() {
-                if (this.#demoMode && this.#demoModeOffset > 0) {
-                    // Move sprites upward each frame. When offset reaches -200px, reset to 0
-                    // to create a looping demo motion.
-                    this.#demoModeOffset -= this.#dropSpeedPixelsPerSecond / 10;
-                    this.drawSprites();
+            animate(timestamp) {
+                // Calculate delta time in seconds
+                const deltaTime = (timestamp - this.#lastFrameTime) / 1000;
+                this.#lastFrameTime = timestamp;
+
+                // Check if clouds should start falling
+                if (!this.#demoMode && !this.#cloudsFalling && this.#gameStartTime > 0) {
+                    const elapsedTime = timestamp - this.#gameStartTime;
+                    const loonReachedThirdCloud = this.#loonCurrentCloudIndex >= 2;
+                    
+                    if (elapsedTime >= this.#startLevelTimeoutMilliseconds || loonReachedThirdCloud) {
+                        this.#cloudsFalling = true;
+                    }
                 }
+
+                // Apply falling to clouds if active
+                if (this.#cloudsFalling) {
+                    const fallDistance = this.#dropSpeedPixelsPerSecond * deltaTime;
+                    for (const cloud of this.#clouds) {
+                        cloud.y += fallDistance;
+                    }
+                    this.#balloon.y += fallDistance;
+                    // If not jumping, loon falls with the cloud or balloon
+                    if (!this.#loonIsJumping) {
+                        if (this.#loonOnBalloon) {
+                            this.#loon.y = this.#balloon.y + this.#balloonSprite.height - 6 - this.#loonSprite.height;
+                            this.#loon.x = this.#balloon.x + (this.#balloonSprite.width - this.#loonSprite.width) / 2;
+                        } else {
+                            this.#loon.y += fallDistance;
+                        }
+                    }
+                }
+
+                if (this.#demoMode && this.#demoModeOffset > 0) {
+                    // Move sprites upward each frame based on delta time for smooth, consistent motion
+                    this.#demoModeOffset -= (this.#dropSpeedPixelsPerSecond * deltaTime) * 8;
+                } else if (this.#loonIsJumping) {
+                    // Update jump animation
+                    this.#loonJumpProgress += deltaTime / this.#loonJumpDuration;
+                    
+                    if (this.#loonJumpProgress >= 1) {
+                        // Jump complete
+                        this.#loonJumpProgress = 1;
+                        this.#loonIsJumping = false;
+                        
+                        // If landing on a cloud, ensure exact positioning
+                        if (!this.#loonIsFalling && !this.#loonOnBalloon) {
+                            const targetCloud = this.#clouds[this.#loonCurrentCloudIndex];
+                            this.#loon.x = targetCloud.x + (this.#cloudPlatformSprite.width - this.#loonSprite.width) / 2;
+                            this.#loon.y = targetCloud.y - this.#loonSprite.height;
+                        } else if (this.#loonOnBalloon) {
+                            // Loon landed on balloon - start balloon escape
+                            this.#balloonEscaping = true;
+                            this.#cloudsFalling = false;
+                        }
+                        
+                        // If falling, game over (could restart level here)
+                        if (this.#loonIsFalling) {
+                            // TODO: Handle game over - for now just keep loon off screen
+                        }
+                    }
+                    
+                    const t = this.#loonJumpProgress;
+                    
+                    if (this.#loonIsFalling) {
+                        // Falling animation - simple arc then accelerating fall
+                        const easeT = t * t; // Accelerating fall
+                        this.#loon.x = this.#loonJumpStartX + (this.#loonJumpEndX - this.#loonJumpStartX) * t;
+                        
+                        // Small arc at start, then falling motion
+                        const linearY = this.#loonJumpStartY + (this.#loonJumpEndY - this.#loonJumpStartY) * easeT;
+                        const arcHeight = 30; // Smaller arc for failed jump
+                        const arcOffset = t < 0.3 ? -arcHeight * (1 - (t / 0.3)) : 0; // Arc only at beginning
+                        this.#loon.y = linearY + arcOffset;
+                    } else {
+                        // Check if jumping to balloon
+                        if (this.#jumpingToBalloon) {
+                            // Jumping to balloon - update target as balloon may be moving
+                            this.#loonOnBalloon = true;
+                            const currentEndY = this.#balloon.y + this.#balloonSprite.height - 6 - this.#loonSprite.height;
+                            const currentEndX = this.#balloon.x + (this.#balloonSprite.width - this.#loonSprite.width) / 2;
+                            
+                            const easeT = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+                            this.#loon.x = this.#loonJumpStartX + (currentEndX - this.#loonJumpStartX) * easeT;
+                            
+                            const linearY = this.#loonJumpStartY + (currentEndY - this.#loonJumpStartY) * easeT;
+                            const arcHeight = 15; // Small arc for balloon jump
+                            const arcOffset = -arcHeight * 4 * t * (1 - t);
+                            this.#loon.y = linearY + arcOffset;
+                        } else {
+                            // Normal jump to cloud - update target position if clouds are falling
+                            const targetCloud = this.#clouds[this.#loonCurrentCloudIndex];
+                            const currentEndY = targetCloud.y - this.#loonSprite.height;
+                        
+                        // Use easing function for smooth arc
+                        const easeT = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+                        
+                        // Linear interpolation for horizontal movement
+                        this.#loon.x = this.#loonJumpStartX + (this.#loonJumpEndX - this.#loonJumpStartX) * easeT;
+                        
+                        // Parabolic arc for vertical movement (creates jump arc)
+                            const linearY = this.#loonJumpStartY + (currentEndY - this.#loonJumpStartY) * easeT;
+                            const arcHeight = 60; // Peak height of jump arc
+                            const arcOffset = -arcHeight * 4 * t * (1 - t); // Parabola that peaks at t=0.5
+                            this.#loon.y = linearY + arcOffset;
+                        }
+                    }
+                }
+
+                // Handle balloon escape and level restart
+                if (this.#balloonEscaping) {
+                    // Balloon floats up
+                    const escapeSpeed = this.#dropSpeedPixelsPerSecond * 2;
+                    this.#balloon.y -= escapeSpeed * deltaTime;
+                    this.#loon.y = this.#balloon.y + this.#balloonSprite.height - 6 - this.#loonSprite.height;
+                    this.#loon.x = this.#balloon.x + (this.#balloonSprite.width - this.#loonSprite.width) / 2;
+                    
+                    // Check if balloon top reached bottom of canvas (balloon escaped)
+                    if (this.#balloon.y + this.#balloonSprite.height <= 0) {
+                        // Level complete - restart with more clouds
+                        this.#cloudsCount += 5;
+                        this.#score++;
+                        this.initGame();
+                        this.#loonCurrentCloudIndex = 0;
+                        this.#loonOnBalloon = false;
+                        this.#balloonEscaping = false;
+                        this.#cloudsFalling = false;
+                        this.#gameStartTime = 0;
+                    }
+                }
+
+                this.drawSprites();
+                requestAnimationFrame((timestamp) => this.animate(timestamp));
             }
         }
 
