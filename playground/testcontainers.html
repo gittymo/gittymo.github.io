@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Containers</title>
+</head>
+<body>
+    
+</body>
+<script type="module">
+    import { Cache } from './shared/containers.js';
+    
+    var cache = new Cache();
+    cache.AddOrGet("testKey", () => "Hello");
+    console.log(cache.Get("testKey"));
+    var retrievedValue = cache.AddOrGet("testKey", () => "Hello");
+    console.log(`Retrieved value is "${retrievedValue}".`);
+</script>
+</html>

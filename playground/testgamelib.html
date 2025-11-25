@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Game Lib</title>
+</head>
+<body>
+    <canvas id="testimage" width="800" height="600" style="border: 1px solid black"></canvas>
+</body>
+<script type="module">
+    import { SpriteSet } from './shared/gamelib.js';
+
+    // Use async/await with the Create factory method
+    const testSprite = await SpriteSet.Create(["./images/balloonloon/balloon.png"]);
+    const canvas = document.getElementById("testimage");
+    const ctx = canvas.getContext('2d');
+    testSprite.DrawRotated(ctx, 320, 240, 90);
+</script>
+</html>
